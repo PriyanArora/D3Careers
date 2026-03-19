@@ -1,0 +1,13 @@
+#just npm install, repo automatically installs all dependencies, no need to commit hundreds of modules
+node_modules/
+
+#confidential data
+.env
+.env.*
+*.local
+
+#vite built output from src
+dist/
+
+#if any mac users pulling this repo
+.DS_Store

@@ -2,19 +2,18 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 1
+## Current Phase: 2
 
 ---
 
 ## Phase Checklist
 
-### PHASE 1 — Repository Setup
-- [ ] GitHub repo live with merged PR
-- [ ] Folder structure matches spec
-- [ ] `.gitignore` committed (covers .env, node_modules/, dist/)
-- [ ] No direct commits to main
+### PHASE 1 — Repository Setup ✓
+- [x] GitHub repo live with merged PR
+- [x] Folder structure matches spec
+- [x] `.gitignore` committed (covers .env, node_modules/, dist/)
+- [x] No direct commits to main
 - **Commit:** `chore(init): scaffold project structure and gitignore`
-- **Notes:**
 
 ### PHASE 2 — Database Setup
 - [ ] Atlas connected (`node -e "require('./db')"` succeeds)

@@ -1,6 +1,6 @@
 # PathFinder — Progress Tracker
 
-Update this file as you complete each phase. Security fixes from the original SECURITY_FIXES.md are now integrated into Architecture.md and BuildFlow.md at the relevant phases.
+Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
 ## Current Phase: 1
 
@@ -130,7 +130,7 @@ Update this file as you complete each phase. Security fixes from the original SE
 - [ ] Alumni gets toast on booking (polling GET /api/alumni/:id/sessions)
 - [ ] No WebSocket connections anywhere (Network tab: zero WS entries)
 - [ ] Polling stops on logout
-- **Commit:** `feat(socket): add alumni online polling and booking notification`
+- **Commit:** `feat(polling): add alumni online polling and booking notification`
 - **Notes:**
 
 ### PHASE 13 — Student Dashboard
@@ -188,22 +188,3 @@ Update this file as you complete each phase. Security fixes from the original SE
 - **Commit:** `ci: add github actions pipelines`
 - **Notes:**
 
----
-
-## Security Fixes Integration
-
-All security fixes from the original SECURITY_FIXES.md are now built into the relevant phases above:
-
-| Fix | Where Integrated |
-|---|---|
-| IDOR on protected routes | Phase 10A — ownership check on every parameterized route |
-| CORS locked to origin | Phase 4 — `cors({ origin: CLIENT_ORIGIN })` |
-| Rate limiting on auth | Phase 4 — express-rate-limit on /api/auth |
-| Input validation | Phase 10A — express-validator on registration |
-| Role not from body | Phase 10A — split registration routes, role server-side |
-| Alumni two-step registration | Phase 10A/11 — register account, then submit profile |
-| depth: String not Number | Phase 2 — Student schema |
-| Complete SECOND_ROLE_MAP | Phase 3 — all 17 first jobs covered |
-| Real-time via polling only | Phase 12 — GET /api/alumni/online + GET /api/alumni/:id/sessions + setInterval |
-| Stale name refs in docs | Fixed in these new files |
-| Webhook sig test spec | Phase 11 — 3 Jest tests before implementation |

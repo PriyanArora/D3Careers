@@ -5,6 +5,23 @@
 
 First-gen college students lack informal career guidance. PathFinder visualizes real career trajectories as interactive D3.js Sankey diagrams and connects students with alumni mentors who walked similar paths.
 
+## System Overview
+
+```
+         Vercel (Frontend)              Render (Backend)
+         React 18 + Vite               Node.js 20 + Express
+         React Router v7 (lib mode)
+                │                              │
+                │ HTTPS (Axios + JWT)          ├── MongoDB Atlas (M0)
+                │ HTTPS (polling, 30s)         ├── Upstash Redis (REST)
+                │                              ├── SendGrid (email)
+                └──────────────────────────────┘
+                                               ↑
+                                     Cal.com webhook
+```
+
+Core constraint: **the Sankey diagram is the front door.** Guests must see the full diagram immediately.
+
 ## Core Features
 
 - Interactive Sankey diagram: majors → first jobs → career progressions (D3.js + d3-sankey)
@@ -50,10 +67,20 @@ TDD on `sankeyService.js` requires Jest before the implementation exists.
 `depth=2` → major→firstJob only. `depth=3` → adds firstJob→secondRole. `depth=full` → all transitions. Must be wired UI → query param → aggregation pipeline.
 
 ### D5 — Cal.com Webhook Is Single Booking Source of Truth
-Student clicks Schedule Chat → Cal.com embed → booking → webhook to `POST /api/bookings/webhook` → `MentorSession` created → SendGrid email. No `POST /api/alumni/request`. No `MentorRequest` model.
+No `MentorRequest` model. Full flow:
+```
+Student → Schedule Chat → SoftAuthGate
+  → (guest) LoginPromptModal, page stays
+  → (logged in) Cal.com embed renders
+  → booking → Cal.com POST /api/bookings/webhook
+  → verifyWebhookSignature: crypto.createHmac('sha256', secret).update(payload).digest('hex')
+  → MentorSession created (calEventUid dedup)
+  → SendGrid email → alumni inbox
+  → alumni polling detects new session → toast
+```
 
 ### D6 — Full Cache Flush on New Alumni Registration
-All `sankey:*` keys deleted. Partial invalidation too complex for MVP. 1-hour TTL bounds staleness.
+Key format: `sankey:{major|'all'}:{background|'all'}:{depth|'full'}`. Lifecycle: request → cache check → hit returns / miss runs pipeline → cache set (1hr TTL) → return. New registration deletes all `sankey:*` keys.
 
 ### D7 — Polling for All Real-Time Features
 Both online indicators and booking notifications use polling — no WebSocket infrastructure. `GET /api/alumni/online` (all visitors, 30s) for green dots. `GET /api/alumni/:id/sessions` (auth alumni, 30s) for booking toast — client compares count to previous poll, shows toast on increase. Interview answer: "Polling is appropriate at this traffic volume. Socket.IO would demonstrate authenticated connection patterns but adds infrastructure complexity without meaningful benefit here."
@@ -61,10 +88,7 @@ Both online indicators and booking notifications use polling — no WebSocket in
 ### D8 — HomePage Is a Landing Page
 Not a redirect. Hero + value prop + CTAs. Makes it look like a product.
 
-### D9 — Feature Branches + PRs
-Branch naming: `feat/<scope>/<description>`. Never commit to `main` directly.
-
-### D10 — Error Re-Throw Preserves Cause
+### D9 — Error Re-Throw Preserves Cause
 ```javascript
 throw new Error('[sankeyService] Failed', { cause: error })
 ```
@@ -167,6 +191,32 @@ const SECOND_ROLE_MAP = {
 
 ---
 
+## Aggregation Pipeline (sankeyService)
+
+1. **$match** — filter by `major` and/or `backgroundTags`
+2. **$project** — slice `careerTimeline` by `depth` (2, 3, or full)
+3. **$unwind** — one doc per career stage
+4. **$group** — count alumni per (source, target) transition pair
+5. **buildSankeyShape** — deduplicate nodes, format links
+
+Output: `{ nodes: [{ name }], links: [{ source, target, value }] }`
+
+---
+
+## Frontend Pages
+
+| Page | Route | Auth | Guard |
+|---|---|---|---|
+| HomePage | `/` | Public | None |
+| PathwaysPage | `/pathways` | Public | None |
+| AlumniPage | `/alumni` | Public | None |
+| AlumniProfilePage | `/alumni/:id` | Public | SoftAuthGate on Schedule Chat |
+| DashboardPage | `/dashboard` | Protected | ProtectedRoute → /login |
+| LoginPage | `/login` | Public | None |
+| RegisterPage | `/register` | Public | None |
+
+---
+
 ## API Reference
 
 ### Public (No Auth)
@@ -189,7 +239,7 @@ const SECOND_ROLE_MAP = {
 ### Protected (authMiddleware + IDOR check)
 | Method | Route | Notes |
 |---|---|---|
-| POST | `/api/alumni` | Alumni career profile submission, sets `isProfileComplete` |
+| POST | `/api/alumni` | Step 2 of alumni registration (step 1: `/auth/register/alumni`). Submits career profile, sets `isProfileComplete: true` |
 | GET | `/api/students/:id/dashboard` | `req.user.id === req.params.id` or 403 |
 | POST | `/api/students/:id/paths` | Save bookmark — IDOR check |
 | DELETE | `/api/students/:id/paths/:pathId` | Remove bookmark — IDOR check |
@@ -221,9 +271,9 @@ pathfinder/
 ├── server/
 │   ├── models/              → Alumni.js, Student.js, MentorSession.js
 │   ├── routes/              → alumni, students, pathways, bookings, auth
-│   ├── controllers/         → alumniController, studentController, authController, bookingController
+│   ├── controllers/         → alumniController, studentController, pathwaysController, authController, bookingController
 │   ├── services/
-│   │   ├── sankeyService.js → runAggregationPipeline, buildSankeyShape, getSankeyData
+│   │   ├── sankeyService.js → runAggregationPipeline, buildSankeyShape, buildCacheKey, getSankeyData
 │   │   ├── cacheService.js  → get, set, flushSankeyCache
 │   │   └── emailService.js  → sendBookingNotification
 │   ├── middleware/           → authMiddleware (+ optionalAuth named export), errorMiddleware

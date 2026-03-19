@@ -21,7 +21,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 **Tasks:**
 - `mkdir pathfinder && cd pathfinder && git init && git checkout -b chore/init`
-- Create folder structure: `client/`, `server/` with `models/ routes/ controllers/ services/ middleware/ sockets/ __tests__/ scripts/`, `.github/workflows/`
+- Create folder structure: `client/`, `server/` with `models/ routes/ controllers/ services/ middleware/ __tests__/ scripts/`, `.github/workflows/`
 - Create `.gitignore` BEFORE any other file: `node_modules/`, `.env`, `.env.*`, `*.local`, `dist/`, `.DS_Store`
 - Commit, push, open PR, merge to main
 
@@ -75,7 +75,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 **Goal:** Server starts, all route files return placeholders, health check returns 200.
 
 **Tasks:**
-- `npm install express dotenv cors nodemon && npm install --save-dev eslint`
+- `npm install express cors nodemon && npm install --save-dev eslint`
 - `npm install express-rate-limit express-validator` (security deps)
 - Create `server.js` — Express, CORS locked to `CLIENT_ORIGIN`, MongoDB connect, env guards
 - Apply `express-rate-limit` on `/api/auth` prefix: 20 req / 15 min / IP

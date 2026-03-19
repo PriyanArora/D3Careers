@@ -23,7 +23,7 @@ One complete feature through every layer before the next. "Your next task: Filte
 *Bogard, Vertical Slice Architecture (2018)*
 
 ### H3 — Conventional Commits
-`<type>(<scope>): <description>`. Imperative, present tense, <72 chars. Types: feat, fix, chore, test, refactor, docs, ci, perf. Scopes: sankey, pathways, alumni, auth, dashboard, seed, socket, cache, docker, ci, booking, server, client. If committing to main directly: redirect to branch immediately.
+`<type>(<scope>): <description>`. Imperative, present tense, <72 chars. Types: feat, fix, chore, test, refactor, docs, ci, perf. Scopes: sankey, pathways, alumni, auth, dashboard, seed, polling, cache, docker, ci, booking, server, client. If committing to main directly: redirect to branch immediately.
 *Conventional Commits v1.0.0*
 
 ### H4 — Test First on Core Logic
@@ -38,7 +38,7 @@ throw new Error('[sankeyService] Failed', { cause: error })
 *Martin, Clean Code (2008); McConnell, Code Complete (2004)*
 
 ### H6 — YAGNI / KISS / DRY
-Build what the current phase needs. Catch violations: recommendation engine before filters work → "Post-MVP." Socket.IO before Phase 12 → "YAGNI." Five-role RBAC for two roles → "Two roles. One check." Extract repeated values: `const SANKEY_TTL_SECONDS = 3600`.
+Build what the current phase needs. Catch violations: recommendation engine before filters work → "Post-MVP." Socket.IO for 200-user polling → "YAGNI. Polling covers this." Five-role RBAC for two roles → "Two roles. One check." Extract repeated values: `const SANKEY_TTL_SECONDS = 3600`.
 *Hunt & Thomas, The Pragmatic Programmer (2019)*
 
 ### H7 — Refactor in a Separate Commit
@@ -114,6 +114,8 @@ POST /api/bookings/webhook       → public (sig verified internally)
 GET  /api/bookings/:studentId    → authMiddleware + IDOR
 ```
 
+IDOR pattern: `if (req.user.id !== req.params.id) return res.status(403).json({ error: 'Forbidden' })`
+
 If they put authMiddleware on the Sankey route: "Remove that immediately. The Sankey is the front door. A guest must see the full diagram. Auth on that route defeats the entire product."
 
 ---
@@ -151,7 +153,7 @@ If they put authMiddleware on the Sankey route: "Remove that immediately. The Sa
 | 9 | Filters update diagram, depth works, loading/empty | Auth, profiles |
 | 10A | Hard auth, ProtectedRoute, register/login | Soft gate, Cal.com |
 | 10B | optionalAuth, LoginPromptModal, SoftAuthGate | Cal.com, email |
-| 11 | Profiles public, booking→MentorSession→email | Socket.IO, dashboard |
+| 11 | Profiles public, booking→MentorSession→email | Polling, dashboard |
 | 12 | Online indicators (polling), booking toast (polling) | Dashboard |
 | 13 | Dashboard protected, bookmarks save, Recharts | Docker, Redis |
 | 14 | docker compose up starts 3 services | Upstash, deploy |
@@ -160,15 +162,3 @@ If they put authMiddleware on the Sankey route: "Remove that immediately. The Sa
 | 17 | Full app live on Vercel, 6 e2e scenarios pass | CI/CD |
 | 18 | GitHub Actions green, failed test blocks deploy | N/A |
 
----
-
-## Principles (Never Reverse)
-
-- **Sankey route is permanently public.** Zero auth dependency. The front door.
-- **One alumni collection.** No `/api/mentors`. Decision 1.
-- **Cal.com webhook is booking source of truth.** MentorSession only. No MentorRequest.
-- **JWT in localStorage.** Cross-origin + cold-start rationale. XSS tradeoff documented.
-- **Guest experience is P0.** First-gen students visit before registering. If Sankey doesn't load for guests, product fails.
-- **Seed data quality = diagram quality.** Constrained CAREER_PATHS map is mandatory.
-- **`{ cause: error }` always.** Preserves original stack trace for production debugging.
-- **Untested seams are unpaid debt with interest.**

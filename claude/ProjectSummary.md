@@ -165,29 +165,147 @@ const CAREER_PATHS = {
     { firstJob: 'Junior Engineer', weight: 50 },        { firstJob: 'Technical Sales', weight: 25 },
     { firstJob: 'Manufacturing Associate', weight: 25 },
   ],
+  'Electrical Engineering': [
+    { firstJob: 'Electrical Engineer', weight: 45 },      { firstJob: 'Systems Engineer', weight: 25 },
+    { firstJob: 'Field Service Engineer', weight: 20 },   { firstJob: 'Technical Sales Engineer', weight: 10 },
+  ],
+  'Nursing / Health Sciences': [
+    { firstJob: 'Registered Nurse', weight: 50 },       { firstJob: 'Clinical Coordinator', weight: 25 },
+    { firstJob: 'Health Educator', weight: 15 },         { firstJob: 'Medical Assistant', weight: 10 },
+  ],
+  'Accounting / Finance': [
+    { firstJob: 'Junior Accountant', weight: 40 },  { firstJob: 'Financial Analyst', weight: 30 },
+    { firstJob: 'Audit Associate', weight: 20 },    { firstJob: 'Tax Associate', weight: 10 },
+  ],
 }
 
 const SECOND_ROLE_MAP = {
+  // Computer Science
   'Software Developer':       ['Senior Developer', 'Tech Lead', 'Engineering Manager'],
   'QA Engineer':              ['Senior QA Engineer', 'QA Lead', 'Engineering Manager'],
   'Data Analyst':             ['Senior Analyst', 'Data Scientist', 'Analytics Manager'],
   'IT Support':               ['Systems Administrator', 'IT Manager', 'DevOps Engineer'],
+  // Business Administration
   'Sales Associate':          ['Account Executive', 'Sales Manager', 'VP of Sales'],
   'Marketing Coordinator':    ['Marketing Manager', 'Brand Strategist', 'CMO'],
   'Operations Analyst':       ['Operations Manager', 'Director of Operations', 'COO'],
   'Financial Analyst':        ['Senior Financial Analyst', 'Finance Manager', 'CFO'],
+  // Psychology
   'HR Coordinator':           ['HR Manager', 'People Operations Lead', 'Chief People Officer'],
   'Case Manager':             ['Senior Case Manager', 'Program Director', 'Non-Profit Director'],
   'UX Researcher':            ['Senior UX Researcher', 'UX Lead', 'Head of Design'],
+  // Biology
   'Research Assistant':       ['Research Scientist', 'Principal Investigator', 'Lab Director'],
   'Lab Technician':           ['Senior Lab Technician', 'Lab Manager', 'Research Director'],
   'Healthcare Coordinator':   ['Healthcare Manager', 'Director of Patient Services', 'COO'],
+  // Mechanical Engineering
   'Junior Engineer':          ['Senior Engineer', 'Engineering Lead', 'Director of Engineering'],
   'Technical Sales':          ['Technical Sales Manager', 'VP of Sales', 'Business Development Director'],
   'Manufacturing Associate':  ['Production Supervisor', 'Plant Manager', 'VP of Operations'],
+  // Electrical Engineering
+  'Electrical Engineer':      ['Senior Electrical Engineer', 'Power Systems Engineer', 'Engineering Manager'],
+  'Systems Engineer':         ['Senior Systems Engineer', 'Systems Architect', 'Engineering Manager'],
+  'Field Service Engineer':   ['Senior Field Engineer', 'Field Operations Manager', 'Engineering Manager'],
+  'Technical Sales Engineer': ['Sales Engineer Manager', 'VP of Sales', 'Business Development Director'],
+  // Nursing / Health Sciences
+  'Registered Nurse':         ['Senior Nurse', 'Nurse Practitioner', 'Nursing Manager'],
+  'Clinical Coordinator':     ['Clinical Manager', 'Director of Clinical Operations', 'VP of Patient Services'],
+  'Health Educator':          ['Senior Health Educator', 'Program Manager', 'Director of Public Health'],
+  'Medical Assistant':        ['Senior Medical Assistant', 'Office Manager', 'Practice Administrator'],
+  // Accounting / Finance
+  'Junior Accountant':        ['Senior Accountant', 'Accounting Manager', 'Controller'],
+  'Audit Associate':          ['Senior Auditor', 'Audit Manager', 'Partner'],
+  'Tax Associate':            ['Senior Tax Associate', 'Tax Manager', 'Tax Director'],
+}
+
+const THIRD_ROLE_MAP = {
+  // CS paths
+  'Senior Developer':           ['Staff Engineer', 'VP of Engineering', 'CTO'],
+  'Tech Lead':                  ['Staff Engineer', 'Director of Engineering', 'VP of Engineering'],
+  'Engineering Manager':        ['Director of Engineering', 'VP of Engineering', 'CTO'],
+  'Senior QA Engineer':         ['QA Director', 'Director of Engineering', 'VP of Quality'],
+  'QA Lead':                    ['QA Director', 'Director of Engineering', 'VP of Quality'],
+  'Senior Analyst':             ['Analytics Director', 'VP of Data', 'Chief Data Officer'],
+  'Data Scientist':             ['Lead Data Scientist', 'VP of Data', 'Chief Data Officer'],
+  'Analytics Manager':          ['Analytics Director', 'VP of Data', 'Chief Data Officer'],
+  'Systems Administrator':      ['Infrastructure Lead', 'Director of IT', 'VP of Engineering'],
+  'IT Manager':                 ['Director of IT', 'VP of Technology', 'CTO'],
+  'DevOps Engineer':            ['Staff Engineer', 'Director of Platform', 'VP of Engineering'],
+  // Business paths
+  'Account Executive':          ['Sales Director', 'VP of Sales', 'Chief Revenue Officer'],
+  'Sales Manager':              ['Sales Director', 'VP of Sales', 'Chief Revenue Officer'],
+  'VP of Sales':                ['Chief Revenue Officer', 'General Manager', 'CEO'],
+  'Marketing Manager':          ['Director of Marketing', 'VP of Marketing', 'CMO'],
+  'Brand Strategist':           ['Director of Brand', 'VP of Marketing', 'CMO'],
+  'CMO':                        ['President', 'CEO', 'Board Advisor'],
+  'Operations Manager':         ['Director of Operations', 'VP of Operations', 'COO'],
+  'Director of Operations':     ['VP of Operations', 'COO', 'CEO'],
+  'COO':                        ['President', 'CEO', 'Board Advisor'],
+  'Senior Financial Analyst':   ['Finance Director', 'VP of Finance', 'CFO'],
+  'Finance Manager':            ['Finance Director', 'VP of Finance', 'CFO'],
+  'CFO':                        ['President', 'CEO', 'Board Advisor'],
+  // Psychology paths
+  'HR Manager':                 ['Director of HR', 'VP of People', 'Chief People Officer'],
+  'People Operations Lead':     ['Director of HR', 'VP of People', 'Chief People Officer'],
+  'Chief People Officer':       ['President', 'CEO', 'Board Advisor'],
+  'Senior Case Manager':        ['Program Director', 'Executive Director', 'Chief Program Officer'],
+  'Program Director':           ['Executive Director', 'Chief Program Officer', 'CEO'],
+  'Non-Profit Director':        ['Executive Director', 'CEO', 'Board Chair'],
+  'Senior UX Researcher':       ['Director of Research', 'VP of Design', 'Chief Design Officer'],
+  'UX Lead':                    ['Director of Design', 'VP of Design', 'Chief Design Officer'],
+  'Head of Design':             ['VP of Design', 'Chief Design Officer', 'CPO'],
+  // Biology paths
+  'Research Scientist':         ['Lead Scientist', 'Director of Research', 'VP of R&D'],
+  'Principal Investigator':     ['Director of Research', 'VP of R&D', 'Chief Science Officer'],
+  'Lab Director':               ['VP of R&D', 'Chief Science Officer', 'CEO'],
+  'Senior Lab Technician':      ['Lab Director', 'Director of Research', 'VP of R&D'],
+  'Lab Manager':                ['Lab Director', 'Director of Research', 'VP of R&D'],
+  'Research Director':          ['VP of R&D', 'Chief Science Officer', 'CEO'],
+  'Healthcare Manager':         ['Director of Healthcare Operations', 'VP of Patient Services', 'COO'],
+  'Director of Patient Services': ['VP of Patient Services', 'COO', 'CEO'],
+  // Mechanical Engineering paths
+  'Senior Engineer':            ['Staff Engineer', 'Director of Engineering', 'VP of Engineering'],
+  'Engineering Lead':           ['Director of Engineering', 'VP of Engineering', 'CTO'],
+  'Director of Engineering':    ['VP of Engineering', 'CTO', 'CEO'],
+  'Technical Sales Manager':    ['Director of Sales', 'VP of Sales', 'Chief Revenue Officer'],
+  'Business Development Director': ['VP of Business Development', 'Chief Revenue Officer', 'CEO'],
+  'Production Supervisor':      ['Plant Manager', 'VP of Manufacturing', 'COO'],
+  'Plant Manager':              ['VP of Manufacturing', 'VP of Operations', 'COO'],
+  'VP of Operations':           ['COO', 'President', 'CEO'],
+  // Electrical Engineering paths
+  'Senior Electrical Engineer': ['Lead Engineer', 'Director of Engineering', 'VP of Engineering'],
+  'Power Systems Engineer':     ['Lead Power Engineer', 'Director of Engineering', 'VP of Engineering'],
+  'Senior Systems Engineer':    ['Staff Engineer', 'Director of Engineering', 'VP of Engineering'],
+  'Systems Architect':          ['Director of Architecture', 'VP of Engineering', 'CTO'],
+  'Senior Field Engineer':      ['Field Operations Manager', 'Director of Field Operations', 'VP of Operations'],
+  'Field Operations Manager':   ['Director of Field Operations', 'VP of Operations', 'COO'],
+  'Sales Engineer Manager':     ['Director of Sales Engineering', 'VP of Sales', 'Chief Revenue Officer'],
+  // Nursing / Health Sciences paths
+  'Senior Nurse':               ['Nurse Director', 'VP of Nursing', 'Chief Nursing Officer'],
+  'Nurse Practitioner':         ['Lead Nurse Practitioner', 'Director of Clinical Services', 'Chief Nursing Officer'],
+  'Nursing Manager':            ['Director of Nursing', 'VP of Nursing', 'Chief Nursing Officer'],
+  'Clinical Manager':           ['Director of Clinical Operations', 'VP of Patient Services', 'COO'],
+  'Director of Clinical Operations': ['VP of Patient Services', 'COO', 'CEO'],
+  'VP of Patient Services':     ['COO', 'President', 'CEO'],
+  'Senior Health Educator':     ['Director of Public Health', 'VP of Community Health', 'Chief Health Officer'],
+  'Program Manager':            ['Director of Programs', 'VP of Programs', 'Executive Director'],
+  'Director of Public Health':  ['VP of Public Health', 'Chief Health Officer', 'Commissioner of Health'],
+  'Senior Medical Assistant':   ['Office Manager', 'Practice Administrator', 'Director of Operations'],
+  'Office Manager':             ['Practice Administrator', 'Director of Operations', 'COO'],
+  'Practice Administrator':     ['Regional Director', 'VP of Operations', 'COO'],
+  // Accounting / Finance paths
+  'Senior Accountant':          ['Accounting Director', 'Controller', 'CFO'],
+  'Accounting Manager':         ['Controller', 'VP of Finance', 'CFO'],
+  'Controller':                 ['VP of Finance', 'CFO', 'CEO'],
+  'Senior Auditor':             ['Audit Director', 'Partner', 'Managing Partner'],
+  'Audit Manager':              ['Audit Director', 'Partner', 'Managing Partner'],
+  'Partner':                    ['Managing Partner', 'CEO', 'Board Chair'],
+  'Senior Tax Associate':       ['Tax Director', 'Partner', 'Managing Partner'],
+  'Tax Manager':                ['Tax Director', 'Partner', 'Managing Partner'],
+  'Tax Director':               ['Partner', 'Managing Partner', 'CEO'],
 }
 ```
-200 alumni. Weighted sampling produces 20-40+ per major→job transition. Pure Faker randomness breaks the Sankey.
+800 alumni (100 per major). Weighted sampling on firstJob, random on secondRole/thirdRole. ~50% of alumni have a thirdRole (careerTimeline length 3), the rest have length 2. Data sourced from refined Kaggle dataset with career paths reassigned via maps above.
 
 ---
 

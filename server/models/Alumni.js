@@ -51,5 +51,5 @@ const alumniSchema = new Schema({
   }],
 }, {timestamps: true});
 
-const alumni = mongoose.model("Alumni", alumniSchema);
-module.exports = alumni;
+const Alumni = mongoose.model("Alumni", alumniSchema);
+module.exports = Alumni;

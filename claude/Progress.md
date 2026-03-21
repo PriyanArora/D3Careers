@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 2
+## Current Phase: 3
 
 ---
 
@@ -15,15 +15,14 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - [x] No direct commits to main
 - **Commit:** `chore(init): scaffold project structure and gitignore`
 
-### PHASE 2 — Database Setup
-- [ ] Atlas connected (`node -e "require('./db')"` succeeds)
-- [ ] Alumni.js defined (includes `isProfileComplete: Boolean`)
-- [ ] Student.js defined (savedPaths.filters.depth is `String`, not Number)
-- [ ] MentorSession.js defined
-- [ ] MentorRequest.js does NOT exist
-- [ ] `.env` not committed
+### PHASE 2 — Database Setup ✓
+- [x] Atlas connected (`node -e "require('./db')"` succeeds)
+- [x] Alumni.js defined (includes `isProfileComplete: Boolean`)
+- [x] Student.js defined (savedPaths.filters.depth is `String`, not Number)
+- [x] MentorSession.js defined
+- [x] MentorRequest.js does NOT exist
+- [x] `.env` not committed
 - **Commit:** `feat(db): add atlas connection and schemas`
-- **Notes:**
 
 ### PHASE 3 — Seed Data
 - [ ] ~200 alumni in Atlas

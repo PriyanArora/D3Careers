@@ -11,10 +11,11 @@ const connectDB = async() =>{
     await mongoose.connect(MONGO_URI);
     console.log("Connected to MongoDB");
   }
-  catch(error){
-    console.error("Connection failed to mongo: ", error);
-    process.exit(1);
+  catch(err){
+    throw new Error("Error connecting to database", {cause: err});
   }
-}
+};
 
 module.exports = connectDB;
+
+//process.env doesnt need dotenv here but needs it in seed.js for populating dataset

@@ -28,5 +28,5 @@ const mentorSession = new Schema({
   },
 }, {timestamps: true});
 
-const session = mongoose.model("MentorSession", mentorSession);
-module.exports = session;
+const Session = mongoose.model("MentorSession", mentorSession);
+module.exports = Session;

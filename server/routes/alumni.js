@@ -1,25 +1,18 @@
 const express = require("express");
+const { getAlumni, getAlumniById, getOnlineAlumni, createAlumni } = require("../controllers/alumniController.js");
 const router = express.Router();
 
-router.get("/", (req,res)=>{
-  res.json({message: "alumni route"});
-});
+router.get("/", getAlumni);
 
-router.get("/online", (req,res)=>{
-  res.json({message: "alumni online route"});
-});
+router.get("/online", getOnlineAlumni);
 
-router.get("/:id", (req,res)=>{
-  res.json({message: "alumni id route"});
-});
+router.get("/:id", getAlumniById);
 
 router.get("/:id/sessions", (req,res)=>{
   res.json({message: "alumni id session route"});
 });
 
-router.post("/", (req,res)=>{
-  res.json({id: "alumni post route"});
-});
+router.post("/", createAlumni);
 
 
 

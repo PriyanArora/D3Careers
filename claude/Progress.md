@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 4
+## Current Phase: 6
 
 ---
 
@@ -32,25 +32,25 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(seed): generate 200 alumni with constrained weighted career paths`
 - **Notes:** Expanded to 8 majors. 800 alumni total. 400 have 3-entry careerTimeline (thirdRole), 400 have 2-entry. Data sourced from refined Kaggle dataset.
 
-### PHASE 4 — Express Server Skeleton
-- [ ] `npm run dev` starts server
-- [ ] `GET /api/health` → 200
-- [ ] All route stubs respond in Thunder Client
-- [ ] CORS locked to CLIENT_ORIGIN env var
-- [ ] Rate limiter on /api/auth (20 req / 15 min)
-- [ ] Env guards on all required vars
+### PHASE 4 — Express Server Skeleton ✓
+- [x] `npm run dev` starts server
+- [x] `GET /api/health` → 200
+- [x] All route stubs respond in Thunder Client
+- [x] CORS locked to CLIENT_ORIGIN env var
+- [x] Rate limiter on /api/auth (20 req / 15 min)
+- [x] Env guards on all required vars
 - **Commit:** `feat(server): add express skeleton with health check and route stubs`
-- **Notes:**
+- **Notes:** Express 4 pinned (avoided Express 5 breaking changes). Route mounts ordered before startServer(). CLIENT_ORIGIN added to .env for local dev.
 
-### PHASE 5 — Core REST API
-- [ ] Every route tested individually in Thunder Client
-- [ ] `GET /api/alumni` returns real Atlas data with pagination (?page=&limit=, default limit=20)
-- [ ] `GET /api/alumni/online` returns array (in-memory Set backed)
-- [ ] `GET /api/alumni/:id/sessions` returns [] placeholder
-- [ ] `GET /api/pathways/sankey` returns hardcoded `{ nodes: [], links: [] }`
-- [ ] No auth applied. No `/api/mentors` routes.
-- **Commit:** `feat(api): implement crud routes`
-- **Notes:**
+### PHASE 5 — Core REST API ✓
+- [x] Every route tested individually in Hopscotch
+- [x] `GET /api/alumni` returns real Atlas data with pagination (?page=&limit=, default limit=20)
+- [x] `GET /api/alumni/online` returns array (in-memory Set backed)
+- [x] `GET /api/alumni/:id/sessions` returns [] placeholder
+- [x] `GET /api/pathways/sankey` returns hardcoded `{ nodes: [], links: [] }`
+- [x] No auth applied. No `/api/mentors` routes.
+- **Commit:** `feat(api): implement crud routes for alumni and students`
+- **Notes:** alumniController.js (getAlumni, getAlumniById, getOnlineAlumni, createAlumni). studentController.js (createStudent, getStudentDashboard). onlineAlumni in-memory Set in alumniController — populated in Phase 12.
 
 ### PHASE 6 — Aggregation Pipeline + Jest
 - [ ] Jest + Supertest installed and configured

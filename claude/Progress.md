@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 3
+## Current Phase: 4
 
 ---
 
@@ -24,13 +24,13 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - [x] `.env` not committed
 - **Commit:** `feat(db): add atlas connection and schemas`
 
-### PHASE 3 — Seed Data
-- [ ] ~200 alumni in Atlas
-- [ ] Group-by on careerTimeline.0.title: 5+ titles with 15+ alumni each
-- [ ] Complete SECOND_ROLE_MAP covers all 17 first jobs
-- [ ] Every doc has careerTimeline as array
+### PHASE 3 — Seed Data ✓
+- [x] ~200 alumni in Atlas (800 total, 100 per major)
+- [x] Group-by on careerTimeline.0.title: 28 titles, 24 with 15+ alumni each
+- [x] Complete SECOND_ROLE_MAP covers all 28 first jobs (expanded from 17)
+- [x] Every doc has careerTimeline as array
 - **Commit:** `feat(seed): generate 200 alumni with constrained weighted career paths`
-- **Notes:**
+- **Notes:** Expanded to 8 majors. 800 alumni total. 400 have 3-entry careerTimeline (thirdRole), 400 have 2-entry. Data sourced from refined Kaggle dataset.
 
 ### PHASE 4 — Express Server Skeleton
 - [ ] `npm run dev` starts server

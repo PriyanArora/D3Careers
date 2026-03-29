@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 6
+## Current Phase: 7
 
 ---
 
@@ -52,17 +52,17 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(api): implement crud routes for alumni and students`
 - **Notes:** alumniController.js (getAlumni, getAlumniById, getOnlineAlumni, createAlumni). studentController.js (createStudent, getStudentDashboard). onlineAlumni in-memory Set in alumniController — populated in Phase 12.
 
-### PHASE 6 — Aggregation Pipeline + Jest
-- [ ] Jest + Supertest installed and configured
-- [ ] 3 buildSankeyShape tests written BEFORE implementation
-- [ ] 1 Supertest integration test for GET /api/pathways/sankey (200, no token, service mocked)
-- [ ] `npm test` passes (Red → Green verified)
-- [ ] `GET /api/pathways/sankey` returns real {nodes, links}
-- [ ] `?major=`, `?background=`, `?depth=` produce different outputs
-- [ ] `?depth=2` vs `?depth=full` produce different link counts
-- [ ] No token required for sankey route
+### PHASE 6 — Aggregation Pipeline + Jest ✓
+- [x] Jest + Supertest installed and configured
+- [x] 3 buildSankeyShape tests written BEFORE implementation
+- [x] 1 Supertest integration test for GET /api/pathways/sankey (200, no token, service mocked)
+- [x] `npm test` passes (Red → Green verified)
+- [x] `GET /api/pathways/sankey` returns real {nodes, links}
+- [x] `?major=`, `?background=`, `?depth=` produce different outputs
+- [x] `?depth=2` vs `?depth=full` produce different link counts
+- [x] No token required for sankey route
 - **Commit:** `feat(sankey): implement aggregation pipeline and buildSankeyShape with tests`
-- **Notes:**
+- **Notes:** jest --runInBand --forceExit configured. sankeyService.js has runAggregationPipeline (3-stage pipeline: $match, $project, $group + $unionWith for secondJob→thirdJob) and buildSankeyShape (pure transformation using Set for deduplication). depth=2 skips $unionWith. pathways.test.js mocks sankeyService with jest.fn().
 
 ### PHASE 7 — React Frontend Skeleton
 - [ ] React app runs at localhost:5173

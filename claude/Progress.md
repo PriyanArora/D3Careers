@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 9
+## Current Phase: 10A
 
 ---
 
@@ -83,14 +83,14 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(sankey): render d3 sankey diagram with live atlas data`
 - **Notes:** $unionWith silently failed in Mongoose — replaced with 3 separate Alumni.aggregate() calls merged in Node. sankeyService now runs majorToFirst + firstToSecond + secondToThird queries. Added .nodeId(node => node.name) to d3-sankey so string-based source/target resolves correctly. Added sankeyLeft alignment. Diagram shows 4-5 columns due to seed data having deep career paths.
 
-### PHASE 9 — Filter Controls
-- [ ] Every filter dropdown change updates diagram
-- [ ] depth=2 vs depth=full produce visibly different diagrams
-- [ ] Loading skeleton during fetch
-- [ ] Empty state for no-data filter combos
-- [ ] No auth logic in this feature
+### PHASE 9 — Filter Controls ✓
+- [x] Every filter dropdown change updates diagram
+- [x] depth=2 vs depth=full produce visibly different diagrams
+- [x] Loading skeleton during fetch
+- [x] Empty state for no-data filter combos
+- [x] No auth logic in this feature
 - **Commit:** `feat(pathways): add filter panel with major, background, and depth controls`
-- **Notes:**
+- **Notes:** FilterPanel.jsx has 3 controlled selects (major, background, depth). PathwaysPage owns filters state, passes to FilterPanel as props. useEffect depends on filters — re-fetches on every change. URLSearchParams builds query string. loading state controls skeleton vs diagram vs empty state rendering.
 
 ### PHASE 10A — Hard Authentication
 - [ ] POST /api/auth/register/student → {token, user} (role server-side)

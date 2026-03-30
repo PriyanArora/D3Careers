@@ -15,6 +15,9 @@ const createStudent = async(req,res) =>{
 
 const getStudentDashboard = async(req,res) =>{
   try{
+    if (req.user.id !== req.params.id) {
+      return res.status(403).json({ message: 'Forbidden' })
+    }
     const id = req.params.id;
     const student = await Student.findById(id);
 

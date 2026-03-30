@@ -9,13 +9,14 @@ import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import { AuthProvider } from './AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter([
   { path: '/',             element: <HomePage /> },
   { path: '/pathways',     element: <PathwaysPage /> },
   { path: '/alumni',       element: <AlumniPage /> },
   { path: '/alumni/:id',   element: <AlumniProfilePage /> },
-  { path: '/dashboard',    element: <DashboardPage /> },
+  { path: '/dashboard',    element: <ProtectedRoute> <DashboardPage /> </ProtectedRoute>},
   { path: '/login',        element: <LoginPage /> },
   { path: '/register',     element: <RegisterPage /> },
 ])

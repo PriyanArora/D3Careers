@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
-const AuthContext= createContext(null)
+//fallback value if someone calls usecontext(authcontext) outside authprovider
+const AuthContext = createContext(null)
 
 export function AuthProvider({children}){
   const[user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true) 
 
   useEffect(()=>{
     const token = localStorage.getItem('pf_token')
@@ -19,6 +21,7 @@ export function AuthProvider({children}){
       }
     }
     
+    setLoading(false)
   }, [])
 
   function login(token, userData){
@@ -34,7 +37,7 @@ export function AuthProvider({children}){
   }
 
   return (
-    <AuthContext.Provider value={{user,login,logout}}>
+    <AuthContext.Provider value={{user,login,logout, loading}}>
       {children}
     </AuthContext.Provider>
   )
@@ -43,3 +46,6 @@ export function AuthProvider({children}){
 export function useAuth() {
   return useContext(AuthContext)
 }
+
+//loading=true  → return null (blank screen, around 10ms)                                                                                                                     
+//loading=false → re-render in protectedroute → check user → redirect or show dashboard     

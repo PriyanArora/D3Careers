@@ -26,10 +26,9 @@ function buildSankeyShape(rows){
 }
 
 async function runAggregationPipeline(filters){
-  
-  //matchstage is for match stage in aggregation pipeline for if any filter passed in query such as major or background tags, we can give narrowed results
-  const matchStage = {};                                                                                                                                                
-  
+
+  const matchStage = {};
+
   if(filters.major){
     matchStage.major = filters.major;
   }
@@ -38,59 +37,42 @@ async function runAggregationPipeline(filters){
     matchStage.backgroundTags = filters.background;
   }
 
-  //three stages in mongo aggregation pipeline, match for any filters provided in query, project to just get those first,second,third job, group groups those transitions
-
-  const pipeline = [
-    {$match: 
-      matchStage
-    },
-    {$project: { 
-      firstJob: {$arrayElemAt: ["$careerTimeline.title", 0] },
-      secondJob: {$arrayElemAt: ["$careerTimeline.title", 1] },
-      thirdJob: {$arrayElemAt: ["$careerTimeline.title", 2] },
-    }},
-    {$group:{
-      _id: {source: "$firstJob", target: "$secondJob"},
-      count: {$sum: 1},
-    }},
-    {$project: {
-      source: "$_id.source",
-      target: "$_id.target",
-      count: "$count",
-      _id: 0
-    }},
-  ];
-
-  if(filters.depth != "2"){
-    pipeline.push(
-      {$unionWith: {
-        coll: "alumni",
-        pipeline: [
-          {$match: 
-            matchStage
-          },
-          {$project: { 
-            firstJob: {$arrayElemAt: ["$careerTimeline.title", 0] },
-            secondJob: {$arrayElemAt: ["$careerTimeline.title", 1] },
-            thirdJob: {$arrayElemAt: ["$careerTimeline.title", 2] },
-          }},
-          {$group:{
-            _id: {source: "$secondJob", target: "$thirdJob"},
-            count: {$sum: 1},
-          }},
-          {$project: {
-            source: "$_id.source",
-            target: "$_id.target",
-            count: "$count",
-            _id: 0
-          }},
-        ]
-      }},
-    );
+  // run three separate queries and merge results in Node
+  const project = {
+    major: "$major",
+    firstJob: {$arrayElemAt: ["$careerTimeline.title", 0]},
+    secondJob: {$arrayElemAt: ["$careerTimeline.title", 1]},
+    thirdJob: {$arrayElemAt: ["$careerTimeline.title", 2]},
   }
 
-  const results = await Alumni.aggregate(pipeline);
-  return results;
+  // query 1: major to firstJob
+  const majorToFirst = await Alumni.aggregate([
+    {$match: matchStage},
+    {$project: project},
+    {$group: {_id: {source: "$major", target: "$firstJob"}, count: {$sum: 1}}},
+    {$project: {source: "$_id.source", target: "$_id.target", count: "$count", _id: 0}},
+  ])
+
+  // query 2: firstJob to secondJob
+  const firstToSecond = await Alumni.aggregate([
+    {$match: matchStage},
+    {$project: project},
+    {$group: {_id: {source: "$firstJob", target: "$secondJob"}, count: {$sum: 1}}},
+    {$project: {source: "$_id.source", target: "$_id.target", count: "$count", _id: 0}},
+  ])
+
+  // query 3: secondJob to thirdJob (only if depth != 2)
+  let secondToThird = []
+  if(filters.depth !== "2"){
+    secondToThird = await Alumni.aggregate([
+      {$match: matchStage},
+      {$project: project},
+      {$group: {_id: {source: "$secondJob", target: "$thirdJob"}, count: {$sum: 1}}},
+      {$project: {source: "$_id.source", target: "$_id.target", count: "$count", _id: 0}},
+    ])
+  }
+
+  return [...majorToFirst, ...firstToSecond, ...secondToThird]
 }
 
 module.exports = {buildSankeyShape, runAggregationPipeline};

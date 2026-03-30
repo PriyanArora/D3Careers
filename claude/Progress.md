@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 7
+## Current Phase: 8
 
 ---
 
@@ -64,14 +64,14 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(sankey): implement aggregation pipeline and buildSankeyShape with tests`
 - **Notes:** jest --runInBand --forceExit configured. sankeyService.js has runAggregationPipeline (3-stage pipeline: $match, $project, $group + $unionWith for secondJob→thirdJob) and buildSankeyShape (pure transformation using Set for deduplication). depth=2 skips $unionWith. pathways.test.js mocks sankeyService with jest.fn().
 
-### PHASE 7 — React Frontend Skeleton
-- [ ] React app runs at localhost:5173
-- [ ] All 7 pages reachable via React Router v7
-- [ ] Axios hits /api/health, logs 200
-- [ ] AuthContext reads localStorage on mount
-- [ ] api.js has JWT header injection + cold-start retry
+### PHASE 7 — React Frontend Skeleton ✓
+- [x] React app runs at localhost:5173
+- [x] All 7 pages reachable via React Router v7
+- [x] Axios hits /api/health, logs 200
+- [x] AuthContext reads localStorage on mount
+- [x] api.js has JWT header injection + cold-start retry
 - **Commit:** `feat(client): scaffold react app with router, axios, and auth context`
-- **Notes:**
+- **Notes:** React Router v7 library mode (createBrowserRouter + RouterProvider). AuthProvider wraps RouterProvider in main.jsx. api.js uses interceptor for JWT header injection, withRetry for 503 cold-start retry. Health check verified in browser console.
 
 ### PHASE 8 — D3.js Sankey Diagram
 - [ ] Sankey renders with real Atlas data (not hardcoded)

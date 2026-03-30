@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 8
+## Current Phase: 9
 
 ---
 
@@ -73,15 +73,15 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(client): scaffold react app with router, axios, and auth context`
 - **Notes:** React Router v7 library mode (createBrowserRouter + RouterProvider). AuthProvider wraps RouterProvider in main.jsx. api.js uses interceptor for JWT header injection, withRetry for 503 cold-start retry. Health check verified in browser console.
 
-### PHASE 8 — D3.js Sankey Diagram
-- [ ] Sankey renders with real Atlas data (not hardcoded)
-- [ ] Nodes clickable, highlight connected paths
-- [ ] Hover tooltips show alumni counts
-- [ ] Zero auth checks on PathwaysPage
-- [ ] ErrorBoundary wraps SankeyDiagram with fallback
-- [ ] Bookmark button: renders if logged in, null if guest, click = no-op
+### PHASE 8 — D3.js Sankey Diagram ✓
+- [x] Sankey renders with real Atlas data (not hardcoded)
+- [x] Nodes clickable, highlight connected paths
+- [x] Hover tooltips show alumni counts
+- [x] Zero auth checks on PathwaysPage
+- [x] ErrorBoundary wraps SankeyDiagram with fallback
+- [x] Bookmark button: renders if logged in, null if guest, click = no-op
 - **Commit:** `feat(sankey): render d3 sankey diagram with live atlas data`
-- **Notes:**
+- **Notes:** $unionWith silently failed in Mongoose — replaced with 3 separate Alumni.aggregate() calls merged in Node. sankeyService now runs majorToFirst + firstToSecond + secondToThird queries. Added .nodeId(node => node.name) to d3-sankey so string-based source/target resolves correctly. Added sankeyLeft alignment. Diagram shows 4-5 columns due to seed data having deep career paths.
 
 ### PHASE 9 — Filter Controls
 - [ ] Every filter dropdown change updates diagram

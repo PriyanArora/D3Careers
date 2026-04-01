@@ -1,12 +1,13 @@
 const express = require("express");
 const {buildSankeyShape, runAggregationPipeline} = require("../services/sankeyService.js");
 const router = express.Router();
+const {optionalAuth} = require("../middleware/authMiddleware.js");
 
 router.get("/", (req,res)=>{
   res.json({message: "pathways route"});
 });
 
-router.get("/sankey", async(req,res)=>{
+router.get("/sankey", optionalAuth, async(req,res)=>{
   try{
     const major = req.query.major;
     const background = req.query.background;

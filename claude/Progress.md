@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 10A
+## Current Phase: 10B
 
 ---
 
@@ -92,17 +92,17 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(pathways): add filter panel with major, background, and depth controls`
 - **Notes:** FilterPanel.jsx has 3 controlled selects (major, background, depth). PathwaysPage owns filters state, passes to FilterPanel as props. useEffect depends on filters — re-fetches on every change. URLSearchParams builds query string. loading state controls skeleton vs diagram vs empty state rendering.
 
-### PHASE 10A — Hard Authentication
-- [ ] POST /api/auth/register/student → {token, user} (role server-side)
-- [ ] POST /api/auth/register/alumni → {token, user} (role server-side)
-- [ ] express-validator on registration routes
-- [ ] Protected route + token → 200. No token → 401.
-- [ ] IDOR: valid token for wrong user → 403
-- [ ] /dashboard as guest → redirect to /login
-- [ ] All public routes still work without token
-- [ ] Refresh while logged in → still logged in
+### PHASE 10A — Hard Authentication ✓
+- [x] POST /api/auth/register/student → {token, user} (role server-side)
+- [x] POST /api/auth/register/alumni → {token, user} (role server-side)
+- [x] express-validator on registration routes
+- [x] Protected route + token → 200. No token → 401.
+- [x] IDOR: valid token for wrong user → 403
+- [x] /dashboard as guest → redirect to /login
+- [x] All public routes still work without token
+- [x] Refresh while logged in → still logged in
 - **Commit:** `feat(auth): implement jwt login, register, and protected routes`
-- **Notes:**
+- **Notes:** authController.js has registerStudent, registerAlumni, login. generateToken uses jwt.sign with id+role payload, 7d expiry. authMiddleware checks Bearer token, sets req.user. optionalAuth never blocks. ProtectedRoute uses loading state from AuthContext to avoid redirect flash on refresh. IDOR check on all parameterized protected routes.
 
 ### PHASE 10B — Optional Auth + Soft Gate
 - [ ] Sankey returns 200 with no token (never 401)

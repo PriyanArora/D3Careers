@@ -1,13 +1,13 @@
 const express = require("express");
 const { getAlumni, getAlumniById, getOnlineAlumni, createAlumni } = require("../controllers/alumniController.js");
 const router = express.Router();
-const {authMiddleware} = require("../middleware/authMiddleware.js")
+const {authMiddleware, optionalAuth} = require("../middleware/authMiddleware.js")
 
-router.get("/", getAlumni);
+router.get("/", optionalAuth, getAlumni);
 
 router.get("/online", getOnlineAlumni);
 
-router.get("/:id", getAlumniById);
+router.get("/:id", optionalAuth, getAlumniById);
 
 router.get("/:id/sessions", authMiddleware, (req,res)=>{
   if(req.user.id !== req.params.id){

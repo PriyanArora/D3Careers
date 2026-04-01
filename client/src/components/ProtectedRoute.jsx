@@ -4,7 +4,7 @@ import { useAuth } from "../AuthContext";
 export default function ProtectedRoute({children}){
   const {user, loading} = useAuth()
   if(loading){
-    return null
+    return null //wait for loading to become false i.e after useEffect has run async operation properly
   }
   if(!user){
     return <Navigate to="/login" replace />

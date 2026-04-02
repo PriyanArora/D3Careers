@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 10B
+## Current Phase: 12
 
 ---
 
@@ -104,24 +104,24 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(auth): implement jwt login, register, and protected routes`
 - **Notes:** authController.js has registerStudent, registerAlumni, login. generateToken uses jwt.sign with id+role payload, 7d expiry. authMiddleware checks Bearer token, sets req.user. optionalAuth never blocks. ProtectedRoute uses loading state from AuthContext to avoid redirect flash on refresh. IDOR check on all parameterized protected routes.
 
-### PHASE 10B — Optional Auth + Soft Gate
-- [ ] Sankey returns 200 with no token (never 401)
-- [ ] GET /api/alumni returns 200 with no token
-- [ ] Schedule Chat as guest → modal, URL unchanged
-- [ ] Login via modal → authenticated, modal closes
+### PHASE 10B — Optional Auth + Soft Gate ✓
+- [x] Sankey returns 200 with no token (never 401)
+- [x] GET /api/alumni returns 200 with no token
+- [x] Schedule Chat as guest → modal, URL unchanged
+- [x] Login via modal → authenticated, modal closes
 - **Commit:** `feat(auth): add optional auth middleware and soft gate modal`
-- **Notes:**
+- **Notes:** optionalAuth named export added to authMiddleware.js, applied to GET /api/pathways/sankey, GET /api/alumni/, GET /api/alumni/:id. LoginPromptModal.jsx: overlay form, watches user via useEffect, closes on login. SoftAuthGate.jsx: renders children if user, else LoginPromptModal. Schedule Chat button on AlumniProfilePage wrapped in SoftAuthGate.
 
-### PHASE 11 — Alumni Profiles + Scheduling
-- [ ] Alumni profiles fully visible to guests
-- [ ] Schedule Chat as guest → modal (10B seam intact)
-- [ ] Logged-in student completes Cal.com booking
-- [ ] MentorSession in Atlas with calEventUid
-- [ ] Alumni receives SendGrid email
-- [ ] verifyWebhookSignature: 3 Jest tests pass (written before implementation)
-- [ ] MentorRequest.js does NOT exist
+### PHASE 11 — Alumni Profiles + Scheduling (Partial ✓)
+- [x] Alumni profiles fully visible to guests
+- [x] Schedule Chat as guest → modal (10B seam intact)
+- [ ] Logged-in student completes Cal.com booking *(deferred to Phase 16 — needs live Render URL)*
+- [ ] MentorSession in Atlas with calEventUid *(deferred to Phase 16)*
+- [ ] Alumni receives SendGrid email *(deferred to Phase 16 — needs SendGrid account)*
+- [x] verifyWebhookSignature: 3 Jest tests pass (written before implementation)
+- [x] MentorRequest.js does NOT exist
 - **Commit:** `feat(alumni): build profiles, calcom embed, booking webhook, sendgrid`
-- **Notes:**
+- **Notes:** AlumniPage.jsx fetches paginated alumni grid, links to /alumni/:id. AlumniProfilePage.jsx fetches full profile + careerTimeline, SoftAuthGate wraps Schedule Chat button. verifyWebhookSignature implemented in bookingController.js, uses HMAC-SHA256 with CAL_WEBHOOK_SECRET. Cal.com webhook URL and SendGrid deferred to Phase 16 when Render URL is available.
 
 ### PHASE 12 — Real-Time Features
 - [ ] Green dot updates on AlumniPage (via polling GET /api/alumni/online)
@@ -138,6 +138,19 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - [ ] Recharts chart renders with real data
 - [ ] Bookmark button absent from DOM for guests
 - **Commit:** `feat(dashboard): build protected dashboard with bookmarks and recharts`
+- **Notes:**
+
+### PHASE 13B — UI Polish
+- [ ] Consistent layout and navbar across all pages
+- [ ] AlumniPage grid styled (cards with name, role, company, major)
+- [ ] AlumniProfilePage styled (timeline, tags, Schedule Chat button prominent)
+- [ ] PathwaysPage styled (diagram + filter panel layout)
+- [ ] LoginPage + RegisterPage styled (centered form)
+- [ ] DashboardPage styled (sections clearly separated)
+- [ ] LoginPromptModal styled (overlay with backdrop)
+- [ ] Loading skeleton and empty state look intentional
+- [ ] Mobile-friendly (no horizontal scroll on phone)
+- **Commit:** `feat(ui): polish all pages and components`
 - **Notes:**
 
 ### PHASE 14 — Docker

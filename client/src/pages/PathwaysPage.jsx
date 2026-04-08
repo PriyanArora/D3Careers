@@ -46,7 +46,7 @@ export default function PathwaysPage() {
       {loading ? (
         <LoadingSkeleton />
       ) 
-      : data && data.nodes.length > 0 ? (
+      : data && data.nodes?.length > 0 ? (
         <ErrorBoundary><SankeyDiagram data={data} /></ErrorBoundary>
       ) 
       : (

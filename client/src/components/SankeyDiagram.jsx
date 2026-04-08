@@ -109,7 +109,7 @@ export default function SankeyDiagram({ data }){
 
   return (
     <div style={{ position: 'relative' }}>
-      <svg ref={svgRef} width={1200} height={Math.max(500, data.nodes.length * 20)} />
+      <svg ref={svgRef} width={1200} height={Math.max(500, (data?.nodes?.length ?? 0) * 20)} />
       <div
         id="tooltip"
         style={{

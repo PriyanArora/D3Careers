@@ -4,7 +4,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ## Prerequisites
 - Node.js v20 LTS, npm v10+, Git, VS Code (ESLint, Prettier, MongoDB for VS Code, Thunder Client)
-- Docker Desktop is NOT installed until Phase 14
+- Docker Desktop is not used in this project
 
 ## Global Rules (All Phases)
 - **Branching:** `feat/<scope>/<description>`, `fix/...`, `chore/...` — never commit to `main` directly
@@ -264,18 +264,14 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ## PHASE 12 — Real-Time Features
 
-**Goal:** Online indicators update for all visitors. Alumni get booking toast. Both via polling.
+**Goal:** Online indicators update for all visitors via polling.
 
 **Tasks:**
-- Online indicators: `GET /api/alumni/online` every 30s in AlumniPage (stub already exists from Phase 5)
-- Implement `GET /api/alumni/:id/sessions` (authMiddleware + IDOR): return all MentorSessions where `alumniId === req.params.id`
-- AuthContext: on login, start `setInterval` polling `GET /api/alumni/:id/sessions` every 30s. Store previous count in `useRef`. On count increase, trigger toast.
-- `ToastNotification.jsx`: renders on new booking
-- Clear interval on logout
+- Online indicators: `GET /api/alumni/online` every 30s in AlumniPage (client side done, stub exists from Phase 5)
+- Server side: replace in-memory Set with a Map of `{ alumniId → lastSeenTimestamp }`, filter stale entries (>60s) on each request, populate via `optionalAuth` caller ID on any alumni route hit
 
 **Checkpoint:**
 - [ ] Green dot updates on AlumniPage (polling)
-- [ ] Alumni gets toast on booking (polling, not socket)
 - [ ] No WebSocket connections anywhere (Network tab: zero WS entries)
 
 ---
@@ -296,40 +292,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ---
 
-## PHASE 14 — Docker
-
-**Goal:** `docker compose up` starts server + mongo + redis.
-
-**Tasks:**
-- Install Docker Desktop NOW (not before)
-- `server/Dockerfile`: node:20-alpine
-- `docker-compose.yml`: server + mongo:7 + redis:7-alpine
-- `.env.docker` overrides MONGO_URI for local container
-
-**Checkpoint:**
-- [ ] `docker compose up` → all 3 services. Health check 200.
-
----
-
-## PHASE 15 — Redis Caching
-
-**Goal:** Second sankey call returns from cache. New alumni flushes cache. This phase demonstrates cache invalidation patterns for portfolio value — the MongoDB aggregation on 200 records is already under 50ms without it.
-
-**Tasks:**
-- `npm install @upstash/redis`
-- Write cache key test FIRST: `buildCacheKey({ major, bg, depth })` → `sankey:X:Y:Z`
-- `cacheService.js`: get, set (1hr TTL), flushSankeyCache
-- `getSankeyData`: cache check → pipeline → cache set
-- `flushSankeyCache()` called after new alumni registration
-
-**Checkpoint:**
-- [ ] Cache key tests pass
-- [ ] Second call noticeably faster. Key visible in Upstash dashboard.
-- [ ] New alumni registration clears all sankey:* keys
-
----
-
-## PHASE 16 — Deploy Backend (Render)
+## PHASE 14 — Deploy Backend (Render)
 
 **Goal:** Backend live, health check 200, UptimeRobot active.
 
@@ -346,7 +309,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ---
 
-## PHASE 17 — Deploy Frontend (Vercel)
+## PHASE 15 — Deploy Frontend (Vercel)
 
 **Goal:** Full app live. All 6 e2e scenarios pass.
 
@@ -372,7 +335,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ---
 
-## PHASE 18 — CI/CD
+## PHASE 16 — CI/CD
 
 **Goal:** Every push runs lint + tests. Failing test blocks deploy.
 
@@ -396,7 +359,6 @@ A phase is done when the checkpoint passes, not when the code is written.
 | Sankey returns empty | No seed data (run seed.js) or case-sensitive major mismatch |
 | D3 renders nothing, no error | Data shape mismatch — log payload, verify link source/target match node names exactly |
 | JWT 401 on protected route | Missing `Authorization` header, wrong `Bearer ` prefix, or JWT_SECRET mismatch |
-| Docker: server can't reach mongo | Mongo not ready yet — add healthcheck or restart |
 | Depth filter does nothing | Break in chain: FilterPanel → query string → req.query.depth → pipeline. Check each link. |
 | Cold start fails | Verify Axios retry logic handles 503 + network errors. Verify UptimeRobot pings. |
 | Cal.com webhook not firing | Webhook URL points to localhost, not live Render URL |

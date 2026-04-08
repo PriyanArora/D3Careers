@@ -3,7 +3,7 @@ import SoftAuthGate from "../components/SoftAuthGate"
 import { useParams } from "react-router-dom"
 import api from "../api"
 
-export default function AlumniProfilePage(e) {
+export default function AlumniProfilePage() {
   const {id} = useParams()
   const [error, setError] = useState(null)
   const [alumni, setAlumni] = useState(null)
@@ -25,6 +25,7 @@ export default function AlumniProfilePage(e) {
   return (
     <div>
       <h1>Alumni Profile</h1>
+      {error && <p>{error}</p>}
       <p>{alumni?.name}</p>
       <p>{alumni?.currentRole}</p>
       <p>{alumni?.currentCompany}</p>

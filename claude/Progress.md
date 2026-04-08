@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 12
+## Current Phase: 13
 
 ---
 
@@ -123,13 +123,11 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(alumni): build profiles, calcom embed, booking webhook, sendgrid`
 - **Notes:** AlumniPage.jsx fetches paginated alumni grid, links to /alumni/:id. AlumniProfilePage.jsx fetches full profile + careerTimeline, SoftAuthGate wraps Schedule Chat button. verifyWebhookSignature implemented in bookingController.js, uses HMAC-SHA256 with CAL_WEBHOOK_SECRET. Cal.com webhook URL and SendGrid deferred to Phase 16 when Render URL is available.
 
-### PHASE 12 — Real-Time Features
-- [ ] Green dot updates on AlumniPage (via polling GET /api/alumni/online)
-- [ ] Alumni gets toast on booking (polling GET /api/alumni/:id/sessions)
-- [ ] No WebSocket connections anywhere (Network tab: zero WS entries)
-- [ ] Polling stops on logout
-- **Commit:** `feat(polling): add alumni online polling and booking notification`
-- **Notes:**
+### PHASE 12 — Real-Time Features ✓
+- [x] Green dot updates on AlumniPage (via polling GET /api/alumni/online)
+- [x] No WebSocket connections anywhere (Network tab: zero WS entries)
+- **Commit:** `feat(polling): add alumni online polling`
+- **Notes:** onlineAlumni replaced from Set to Map<alumniId, lastSeenTimestamp>. Stamp fires in getAlumni and getAlumniById when req.user.role === 'alumni' (via optionalAuth). getOnlineAlumni filters stale entries >60s before returning. Client polls every 30s with cleanup. Verified: Online text appears next to alumni name in guest browser.
 
 ### PHASE 13 — Student Dashboard
 - [ ] /dashboard as guest → redirect to /login
@@ -153,23 +151,7 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(ui): polish all pages and components`
 - **Notes:**
 
-### PHASE 14 — Docker
-- [ ] Docker Desktop installed (not before this phase)
-- [ ] `docker compose up` starts server + mongo + redis
-- [ ] Health check 200 against containerized stack
-- [ ] .env.docker in .gitignore
-- **Commit:** `chore(docker): add dockerfile and compose config`
-- **Notes:**
-
-### PHASE 15 — Redis Caching *(cache pattern demo — not solving a perf problem)*
-- [ ] buildCacheKey tests written FIRST, then pass
-- [ ] Second sankey call returns from cache (noticeably faster)
-- [ ] Cache key visible in Upstash dashboard
-- [ ] New alumni registration clears all sankey:* keys
-- **Commit:** `feat(cache): add upstash redis caching to sankey service`
-- **Notes:**
-
-### PHASE 16 — Deploy Backend (Render)
+### PHASE 14 — Deploy Backend (Render)
 - [ ] Backend live on public Render URL
 - [ ] GET /api/health → 200 on live URL
 - [ ] Sankey returns real data on live URL
@@ -179,7 +161,7 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `chore(deploy): configure render backend`
 - **Notes:**
 
-### PHASE 17 — Deploy Frontend (Vercel)
+### PHASE 15 — Deploy Frontend (Vercel)
 - [ ] E2E 1: Guest → Sankey loads immediately
 - [ ] E2E 2: Guest → /alumni visible
 - [ ] E2E 3: Guest → Schedule Chat → modal, URL stays
@@ -190,7 +172,7 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `chore(deploy): configure vercel frontend`
 - **Notes:**
 
-### PHASE 18 — CI/CD
+### PHASE 16 — CI/CD
 - [ ] Backend pipeline: lint + jest on every push
 - [ ] Frontend pipeline: lint on every push
 - [ ] Failing test blocks deploy hook (verified by testing)

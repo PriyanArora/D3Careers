@@ -25,18 +25,70 @@ import {sankey, sankeyLinkHorizontal, sankeyLeft} from "d3-sankey"
 
 export default function SankeyDiagram({ data }){
   //D3 and react both want to control DOM, we use useRef hook to give D3 its DOM element which react wont touch
+  const containerRef = useRef(null)
   const svgRef = useRef(null)
+  const tooltipRef = useRef(null)
+
+  const nodeCount = data?.nodes?.length ?? 0
+  const labelOffset = 8
+
+  const measureMaxLabelWidth = (nodes) => {
+    if (!nodes?.length) {
+      return 120
+    }
+
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+
+    if (!context) {
+      return 160
+    }
+
+    context.font = "600 13px Inter, sans-serif"
+
+    return nodes.reduce((max, node) => {
+      const label = node?.name ?? ''
+      return Math.max(max, context.measureText(label).width)
+    }, 0)
+  }
+
+  const maxLabelWidth = measureMaxLabelWidth(data?.nodes)
+
+  const frameTop = 24
+  const frameRight = 16
+  const frameBottom = 24
+  const frameLeft = 16
+  const layoutWidth = 1180
+  const chartWidth = Math.ceil(frameLeft + layoutWidth + labelOffset + maxLabelWidth + frameRight)
+  const height = Math.max(520, nodeCount * 22) + frameTop + frameBottom
 
   useEffect(() => {
     if(!data){
       return //no data then return
     }
 
-    const width = 1200
-    const height = Math.max(500, data.nodes.length * 20)
-
     const svg = d3.select(svgRef.current)
     svg.selectAll("*").remove() //this clears everything before redrawing
+    svg.style('overflow', 'visible')
+
+    const placeTooltipAboveCursor = (event, node) => {
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (!containerRect) {
+        return
+      }
+
+      const rawLeft = event.clientX - containerRect.left
+      const rawTop = event.clientY - containerRect.top - 12
+      const clampedLeft = Math.min(Math.max(rawLeft, 90), containerRect.width - 90)
+      const clampedTop = Math.max(rawTop, 40)
+
+      d3.select(tooltipRef.current)
+        .style('opacity', 1)
+        .html(`<strong>${node.name}</strong><br/>Alumni: ${Math.round(node.value)}`)
+        .style('left', `${clampedLeft}px`)
+        .style('top', `${clampedTop}px`)
+        .style('transform', 'translate(-50%, -100%)')
+    }
 
     //this below sets the rectangular area for drawing where nodes and links will be laid out
     const sankeyLayout = sankey()
@@ -44,11 +96,11 @@ export default function SankeyDiagram({ data }){
       .nodeAlign(sankeyLeft) //force nodes to align left-to-right by connection depth
       .nodeWidth(20)
       .nodePadding(15)
-      .extent([[1, 1], [width - 1, height - 1]]) //we leave 1px marggin (-1) so elements i.e nodes dont touch svg edges
+      .extent([[frameLeft, frameTop], [frameLeft + layoutWidth - 1, height - frameBottom]])
 
     const color = d3.scaleOrdinal()
       .domain([0, 1, 2])
-      .range(['#4f46e5', '#7c3aed', '#a855f7'])
+      .range(['#f7de5a', '#f8d6b3', '#dff5ef'])
       
     const {nodes, links} = sankeyLayout({
       nodes: data.nodes.map(node => ({ ...node })), //this and below copies all array objects and make changes to them instead of real data
@@ -82,15 +134,14 @@ export default function SankeyDiagram({ data }){
         svg.selectAll('path')
           .attr('opacity', link => (link.source === node || link.target === node) ? 0.8 : 0.1)
       })
-      .on('mouseover', (event, node) => {                                                                                                                                   
-        d3.select('#tooltip')
-          .style('opacity', 1)
-          .html(`<strong>${node.name}</strong><br/>Alumni: ${Math.round(node.value)}`)
-          .style('left', `${event.pageX + 10}px`)
-          .style('top', `${event.pageY - 28}px`)
+      .on('mouseover', (event, node) => {
+        placeTooltipAboveCursor(event, node)
+      })
+      .on('mousemove', (event, node) => {
+        placeTooltipAboveCursor(event, node)
       })
       .on('mouseout', () => {
-        d3.select('#tooltip').style('opacity', 0)
+        d3.select(tooltipRef.current).style('opacity', 0)
       })
     
     // drawing  labels
@@ -98,30 +149,28 @@ export default function SankeyDiagram({ data }){
       .selectAll('text')
       .data(nodes)
       .join('text')
-      .attr('x', node => node.x0 < width / 2 ? node.x1 + 6 : node.x0 - 6)
+        .attr('x', node => node.x1 + labelOffset)
       .attr('y', node => (node.y0 + node.y1) / 2)
-      .attr('dy', '0.35em')
-      .attr('text-anchor', node => node.x0 < width / 2 ? 'start' : 'end')
+      .attr('dominant-baseline', 'middle')
+      .attr('text-anchor', 'start')
       .text(node => node.name)
-      .attr('font-size', 12)
+      .attr('fill', '#000')
+      .attr('font-size', 13)
+      .attr('font-weight', 600)
 
-  }, [data])
+      }, [chartWidth, data, frameBottom, frameLeft, frameTop, height, labelOffset, layoutWidth])
 
   return (
-    <div style={{ position: 'relative' }}>
-      <svg ref={svgRef} width={1200} height={Math.max(500, (data?.nodes?.length ?? 0) * 20)} />
+        <div ref={containerRef} className="relative overflow-hidden rounded-3xl border-[3px] border-black bg-white p-4 shadow-[8px_8px_0_#000] sm:p-6">
+          <svg
+            ref={svgRef}
+            viewBox={`0 0 ${chartWidth} ${height}`}
+            preserveAspectRatio="xMinYMin meet"
+            className="block h-auto w-full"
+          />
       <div
-        id="tooltip"
-        style={{
-          position: 'absolute',
-          opacity: 0,
-          background: '#1e1b4b',
-          color: 'white',
-          padding: '6px 10px',
-          borderRadius: '4px',
-          fontSize: '12px',
-          pointerEvents: 'none',
-        }}
+        ref={tooltipRef}
+        className="pointer-events-none absolute z-20 rounded-md border-2 border-black bg-[#111111] px-3 py-2 text-xs text-white opacity-0"
       />
     </div>
   )

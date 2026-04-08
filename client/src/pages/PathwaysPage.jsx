@@ -7,12 +7,16 @@ import LoadingSkeleton from '../components/LoadingSkeleton'
 import EmptyState from '../components/EmptyState'
 
 export default function PathwaysPage() {
-const [data, setData] = useState(null)
+  const [data, setData] = useState(null)
   const [filters, setFilters] = useState({ major: '', background: '', depth: 'full' })
   const [loading, setLoading] = useState(true)
 
-  useEffect(()=>{
+  const handleFilterChange = (nextFilters) => {
     setLoading(true)
+    setFilters(nextFilters)
+  }
+
+  useEffect(()=>{
     //this builds a url query string for me, this would contain the filters such as major background depth
     const params = new URLSearchParams()
     if(filters.major){
@@ -38,20 +42,31 @@ const [data, setData] = useState(null)
   }, [filters])
 
   return (
-    <div>
-      <h1>Career Pathways</h1>
-      <FilterPanel filters={filters} onChange={setFilters} />
+    <section className="pt-10">
+      <div className="mx-auto max-w-245 text-center" data-reveal>
+        <h1 className="mt-6 font-['Epilogue'] text-[38px] font-black uppercase leading-[0.98] tracking-[-0.04em] text-black sm:text-[58px]">
+          Explore real career
+          <br />
+          transitions
+        </h1>
+        <p className="mx-auto mt-5 max-w-190 text-[18px] leading-relaxed text-[#676767]">
+          Filter the Sankey map by major, background, and depth to discover role pathways that match your situation.
+        </p>
+      </div>
+
+      <div className="mt-10" data-reveal>
+      <FilterPanel filters={filters} onChange={handleFilterChange} />
+      </div>
+
+      <div className="mt-8" data-reveal>
       {loading ? (
         <LoadingSkeleton />
-      ) 
-      : data && data.nodes?.length > 0 ? (
+      ) : data && data.nodes?.length > 0 ? (
         <ErrorBoundary><SankeyDiagram data={data} /></ErrorBoundary>
-      ) 
-      : (
+      ) : (
         <EmptyState />
-      )
-      }
-
-    </div>
+      )}
+      </div>
+    </section>
   )
 }

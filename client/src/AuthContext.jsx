@@ -1,28 +1,28 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState } from 'react'
 
 //fallback value if someone calls usecontext(authcontext) outside authprovider
 const AuthContext = createContext(null)
 
 export function AuthProvider({children}){
-  const[user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true) 
-
-  useEffect(()=>{
+  const[user, setUser] = useState(() => {
     const token = localStorage.getItem('pf_token')
     const stored = localStorage.getItem('pf_user')
+
     if(token&&stored){
       try{
-        setUser(JSON.parse(stored))
+        return JSON.parse(stored)
       }
       catch(error){
-        console.error({ cause: error }, 'invalid stored user data')                                                                                                         
+        console.error({ cause: error }, 'invalid stored user data')
         localStorage.removeItem('pf_user')
         localStorage.removeItem('pf_token')
       }
     }
-    
-    setLoading(false)
-  }, [])
+
+    return null
+  })
+  const [loading] = useState(false)
 
   function login(token, userData){
     localStorage.setItem('pf_token', token)

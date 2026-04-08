@@ -8,18 +8,36 @@ import AlumniProfilePage from './pages/AlumniProfilePage'
 import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import NotFoundPage from './pages/NotFoundPage'
 import { AuthProvider } from './AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import { RouterErrorPage } from './components/ErrorBoundary'
+import Layout from './components/Layout'
+import './index.css'
 
 const router = createBrowserRouter([
-  { path: '/',             element: <HomePage />,                                          errorElement: <RouterErrorPage /> },
-  { path: '/pathways',     element: <PathwaysPage />,                                      errorElement: <RouterErrorPage /> },
-  { path: '/alumni',       element: <AlumniPage />,                                        errorElement: <RouterErrorPage /> },
-  { path: '/alumni/:id',   element: <AlumniProfilePage />,                                 errorElement: <RouterErrorPage /> },
-  { path: '/dashboard',    element: <ProtectedRoute> <DashboardPage /> </ProtectedRoute>,  errorElement: <RouterErrorPage /> },
-  { path: '/login',        element: <LoginPage />,                                         errorElement: <RouterErrorPage /> },
-  { path: '/register',     element: <RegisterPage />,                                      errorElement: <RouterErrorPage /> },
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <RouterErrorPage />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'pathways', element: <PathwaysPage /> },
+      { path: 'alumni', element: <AlumniPage /> },
+      { path: 'alumni/:id', element: <AlumniProfilePage /> },
+      {
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
 ])
 
 createRoot(document.getElementById('root')).render(

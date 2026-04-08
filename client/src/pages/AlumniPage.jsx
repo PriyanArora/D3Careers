@@ -1,22 +1,22 @@
-import api from "../api"
-import { withRetry } from "../api"
-import { useState, useEffect } from "react"
-import {Link} from "react-router-dom"
+import api, { withRetry } from '../api'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Card from '../components/UI/Card'
+import PageIntro from '../components/UI/PageIntro'
+import ErrorBanner from '../components/UI/ErrorBanner'
 
 export default function AlumniPage() {
   const [alumni, setAlumni] = useState([])
   const [error, setError] = useState(null)
   const [onlineIds, setOnlineIds] = useState(new Set())
 
-  useEffect(()=>{
-    async function getAlumni(){
-      try{
-        const res = await withRetry(() => api.get("/api/alumni"))
+  useEffect(() => {
+    async function getAlumni() {
+      try {
+        const res = await withRetry(() => api.get('/api/alumni'))
         const alumniData = Array.isArray(res.data) ? res.data : (res.data?.alumni || [])
         setAlumni(alumniData)
-      }
-      catch(error){
+      } catch (error) {
         setError("Alumni couldn't get fetched: " + error.message)
       }
     }
@@ -25,37 +25,32 @@ export default function AlumniPage() {
 
   useEffect(() => {
     async function getOnlineAlumni() {
-      try{
-        const res = await withRetry(() => api.get("/api/alumni/online"))
+      try {
+        const res = await withRetry(() => api.get('/api/alumni/online'))
         setOnlineIds(new Set(res.data)) 
-      }
-      catch(error){
+      } catch (error) {
         setError("Online alumni couldn't get fetched: " + error.message)
       }
     }
-    const id = setInterval(() => getOnlineAlumni(), 30000) //fetch online status every 30 seconds
+    const id = setInterval(() => getOnlineAlumni(), 30000)
     getOnlineAlumni()
-    return () => clearInterval(id) //cleanup function to clear the interval when component unmounts
+    return () => clearInterval(id)
   }, [])
 
-  return(
+  return (
     <section className="pt-10">
-      <div className="mx-auto max-w-245 text-center" data-reveal>
-        <h1 className="mt-6 font-['Epilogue'] text-[38px] font-black uppercase leading-[0.98] tracking-[-0.04em] text-black sm:text-[58px]">
-          Meet mentors who
-          <br />
-          walked your path
-        </h1>
-        <p className="mx-auto mt-5 max-w-190 text-[18px] leading-relaxed text-[#676767]">
-          Browse mentor profiles and open detailed timelines before scheduling a conversation.
-        </p>
-      </div>
+      <PageIntro
+        title={
+          <>
+            Meet mentors who
+            <br />
+            walked your path
+          </>
+        }
+        description="Browse mentor profiles and open detailed timelines before scheduling a conversation."
+      />
 
-      {error && (
-        <div className="mt-8 rounded-3xl border-[3px] border-black bg-[#fff4f2] p-5 text-[#b42318] shadow-[6px_6px_0_#000]">
-          {error}
-        </div>
-      )}
+      <ErrorBanner message={error} className="mt-8" />
 
       <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {alumni.map((person) => (

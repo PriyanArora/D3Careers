@@ -1,6 +1,6 @@
 import {useRef, useEffect} from "react"
 import * as d3 from "d3"
-import {sankey, sankeyLinkHorizontal, sankeyLeft} from "d3-sankey"
+import {sankey, sankeyLinkHorizontal, sankeyJustify} from "d3-sankey"
 
 // //using hardcoded data to test
 // const HARDCODED = {
@@ -58,7 +58,7 @@ export default function SankeyDiagram({ data }){
   const frameRight = 16
   const frameBottom = 24
   const frameLeft = 16
-  const layoutWidth = 1180
+  const layoutWidth = 1380
   const chartWidth = Math.ceil(frameLeft + layoutWidth + labelOffset + maxLabelWidth + frameRight)
   const height = Math.max(520, nodeCount * 22) + frameTop + frameBottom
 
@@ -93,7 +93,7 @@ export default function SankeyDiagram({ data }){
     //this below sets the rectangular area for drawing where nodes and links will be laid out
     const sankeyLayout = sankey()
       .nodeId(node => node.name) //use name as id so string based source/target in links resolve correctly
-      .nodeAlign(sankeyLeft) //force nodes to align left-to-right by connection depth
+      .nodeAlign(sankeyJustify) //spread depths across full width to elongate link paths without changing node width
       .nodeWidth(20)
       .nodePadding(15)
       .extent([[frameLeft, frameTop], [frameLeft + layoutWidth - 1, height - frameBottom]])

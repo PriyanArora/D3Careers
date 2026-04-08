@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import api from "../api"
 import Card from '../components/UI/Card'
 import Button from '../components/UI/Button'
+import ErrorBanner from '../components/UI/ErrorBanner'
 
 export default function AlumniProfilePage() {
   const {id} = useParams()
@@ -26,11 +27,7 @@ export default function AlumniProfilePage() {
 
   return (
     <section className="pt-10">
-      {error && (
-        <div className="rounded-3xl border-[3px] border-black bg-[#fff4f2] p-5 text-[#b42318] shadow-[6px_6px_0_#000]">
-          {error}
-        </div>
-      )}
+      <ErrorBanner message={error} />
 
       <div className="rounded-[28px] border-[3px] border-black bg-[#f8d6b3] p-6 shadow-[9px_9px_0_#000] sm:p-8" data-reveal>
         <p className="font-['Lexend_Mega'] text-[10px] font-black uppercase tracking-[0.12em] text-[#575757]">Alumni profile</p>

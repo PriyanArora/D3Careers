@@ -10,15 +10,16 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import { AuthProvider } from './AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import { RouterErrorPage } from './components/ErrorBoundary'
 
 const router = createBrowserRouter([
-  { path: '/',             element: <HomePage /> },
-  { path: '/pathways',     element: <PathwaysPage /> },
-  { path: '/alumni',       element: <AlumniPage /> },
-  { path: '/alumni/:id',   element: <AlumniProfilePage /> },
-  { path: '/dashboard',    element: <ProtectedRoute> <DashboardPage /> </ProtectedRoute>},
-  { path: '/login',        element: <LoginPage /> },
-  { path: '/register',     element: <RegisterPage /> },
+  { path: '/',             element: <HomePage />,                                          errorElement: <RouterErrorPage /> },
+  { path: '/pathways',     element: <PathwaysPage />,                                      errorElement: <RouterErrorPage /> },
+  { path: '/alumni',       element: <AlumniPage />,                                        errorElement: <RouterErrorPage /> },
+  { path: '/alumni/:id',   element: <AlumniProfilePage />,                                 errorElement: <RouterErrorPage /> },
+  { path: '/dashboard',    element: <ProtectedRoute> <DashboardPage /> </ProtectedRoute>,  errorElement: <RouterErrorPage /> },
+  { path: '/login',        element: <LoginPage />,                                         errorElement: <RouterErrorPage /> },
+  { path: '/register',     element: <RegisterPage />,                                      errorElement: <RouterErrorPage /> },
 ])
 
 createRoot(document.getElementById('root')).render(

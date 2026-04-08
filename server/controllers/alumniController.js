@@ -1,5 +1,5 @@
 const Alumni = require("../models/Alumni.js");
-const onlineAlumni = new Set();
+const onlineAlumni = new Map();
 
 const getAlumni = async(req,res) =>{
   const major = req.query.major;
@@ -29,6 +29,10 @@ const getAlumni = async(req,res) =>{
       Alumni.find(filter).skip((page-1)*limit).limit(limit),
       Alumni.countDocuments(filter)
     ]);
+    
+    if(req.user?.role === 'alumni'){
+      onlineAlumni.set(req.user.id, Date.now());
+    }
 
     res.json({alumni, total, page, totalPages: Math.ceil(total/limit)});
   }
@@ -45,6 +49,11 @@ const getAlumniById = async(req,res) =>{
     if(!alumni){
       return res.status(404).json({ error: 'Alumni not found' });
     }
+    
+    if(req.user?.role === 'alumni'){
+      onlineAlumni.set(req.user.id, Date.now());
+    }
+
     res.json(alumni);
   }
   catch(err){
@@ -54,8 +63,12 @@ const getAlumniById = async(req,res) =>{
 }
 
 const getOnlineAlumni = async(req,res) =>{
-  //below converts set into array and sends it in json
-  res.json(Array.from(onlineAlumni));
+  //below converts map into array and sends it in json
+  const now = Date.now();
+  const activeIds = Array.from(onlineAlumni.entries())                                                                                                                                          
+    .filter(([id, ts]) => now - ts < 60000)           
+    .map(([id]) => id);                                                                                                                                                                         
+  res.json(activeIds); 
 }
   
 const createAlumni = async(req,res) =>{

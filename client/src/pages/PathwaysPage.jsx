@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react'
 import api from '../api'
 import SankeyDiagram from '../components/SankeyDiagram'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { useAuth } from '../AuthContext'
 import FilterPanel from '../components/FilterPanel'
 import LoadingSkeleton from '../components/LoadingSkeleton'
 import EmptyState from '../components/EmptyState'
 
 export default function PathwaysPage() {
-  const { user } = useAuth()
-  const [data, setData] = useState(null)
+const [data, setData] = useState(null)
   const [filters, setFilters] = useState({ major: '', background: '', depth: 'full' })
   const [loading, setLoading] = useState(true)
 
@@ -53,7 +51,7 @@ export default function PathwaysPage() {
         <EmptyState />
       )
       }
-      {user ? <button>Bookmark</button> : null}
+
     </div>
   )
 }

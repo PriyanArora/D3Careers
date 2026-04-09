@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import api from '../api'
+import HeroSection from '../components/landing/HeroSection'
 
 export default function HomePage() {
   useEffect(() => {
@@ -8,5 +9,9 @@ export default function HomePage() {
       .catch(err => console.error({ cause: err }, 'health check failed'))
   }, [])
 
-  return <h1>Home</h1>
+  return (
+    <>
+      <HeroSection />
+    </>
+  )
 }

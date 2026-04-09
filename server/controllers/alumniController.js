@@ -12,7 +12,7 @@ const getAlumni = async(req,res) =>{
 
   //filter function for db
   try{
-    const filter = {isProfileComplete: true};
+    const filter = {};
     if(major){
       filter.major = major;
     }

@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+const apiBaseURL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '/')
+
 //for backend communication
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: apiBaseURL,
 })
 
 //jwt header, attaches token to every api request (for jwt authentication later on)

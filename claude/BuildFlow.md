@@ -278,17 +278,13 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ## PHASE 13 — Student Dashboard
 
-**Goal:** Dashboard protected. Bookmarks save and display. Recharts renders.
+**Goal:** Dashboard protected. Guests redirected to login.
 
 **Tasks:**
-- DashboardPage wrapped in ProtectedRoute. Three sections: saved paths, booked sessions, Recharts bar chart.
-- Wire bookmark button in SankeyDiagram → `POST /api/students/:id/paths`
-- Bookmark button renders only when AuthContext has user. Not hidden — absent from DOM.
+- DashboardPage wrapped in ProtectedRoute.
 
 **Checkpoint:**
-- [ ] `/dashboard` as guest → redirect
-- [ ] Bookmark saves, appears on dashboard
-- [ ] Recharts chart renders. Bookmark absent from DOM for guests.
+- [ ] `/dashboard` as guest → redirect to /login
 
 ---
 

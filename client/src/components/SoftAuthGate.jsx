@@ -1,12 +1,34 @@
-import { useAuth } from "../AuthContext";
-import LoginPromptModal from "./LoginPromptModal";
+import { cloneElement, isValidElement, useState } from 'react'
+import { useAuth } from '../AuthContext'
+import LoginPromptModal from './LoginPromptModal'
 
-export default function SoftAuthGate({children}){
-  const {user} = useAuth()
-  if(user){
+export default function SoftAuthGate({ children }) {
+  const { user } = useAuth()
+  const [open, setOpen] = useState(false)
+
+  if (user) {
     return children
   }
-  else{
-    return (<LoginPromptModal></LoginPromptModal>)
+
+  if (!isValidElement(children)) {
+    return null
   }
+
+  const childClick = children.props.onClick
+  const gatedChild = cloneElement(children, {
+    onClick: (event) => {
+      event.preventDefault()
+      setOpen(true)
+      if (childClick) {
+        childClick(event)
+      }
+    },
+  })
+
+  return (
+    <>
+      {gatedChild}
+      <LoginPromptModal open={open} onClose={() => setOpen(false)} />
+    </>
+  )
 }

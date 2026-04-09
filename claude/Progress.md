@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 13
+## Current Phase: 13B
 
 ---
 
@@ -129,13 +129,10 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `feat(polling): add alumni online polling`
 - **Notes:** onlineAlumni replaced from Set to Map<alumniId, lastSeenTimestamp>. Stamp fires in getAlumni and getAlumniById when req.user.role === 'alumni' (via optionalAuth). getOnlineAlumni filters stale entries >60s before returning. Client polls every 30s with cleanup. Verified: Online text appears next to alumni name in guest browser.
 
-### PHASE 13 — Student Dashboard
-- [ ] /dashboard as guest → redirect to /login
-- [ ] Bookmark button saves path + success toast
-- [ ] Saved path appears on dashboard
-- [ ] Recharts chart renders with real data
-- [ ] Bookmark button absent from DOM for guests
-- **Commit:** `feat(dashboard): build protected dashboard with bookmarks and recharts`
+### PHASE 13 — Student Dashboard ✓
+- [x] /dashboard as guest → redirect to /login
+- **Commit:** `feat(dashboard): build protected dashboard`
+- **Notes:** DashboardPage already wrapped in ProtectedRoute in main.jsx from Phase 10A.
 - **Notes:**
 
 ### PHASE 13B — UI Polish

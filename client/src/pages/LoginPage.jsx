@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link as RouterLink, useNavigate } from "react-router-dom"
 import api from "../api"
 import { useAuth } from "../AuthContext"
 import Card from '../components/UI/Card'
@@ -55,6 +55,12 @@ export default function LoginPage() {
           error={error}
           required
         />
+
+        <p className="mt-1 text-[12px] text-[#6a6a6a]">
+          <RouterLink to="/register" className="font-semibold text-[#3f67b1] hover:underline">
+            Not registered?
+          </RouterLink>
+        </p>
 
         <div className="mt-2">
           <Button type="submit" size="lg">Login</Button>

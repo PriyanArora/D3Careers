@@ -2,12 +2,14 @@ import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../AuthContext'
+import LoginPromptModal from './LoginPromptModal'
 
 const Navbar = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false)
 
   const navItems = [
     { label: 'Pathways', to: '/pathways' },
@@ -40,6 +42,11 @@ const Navbar = () => {
     navigate('/login')
   }
 
+  const handleGuestDashboardClick = () => {
+    closeMenu()
+    setLoginPromptOpen(true)
+  }
+
   return (
     <header className="sticky top-0 z-50 px-4 py-4 sm:px-8">
       <div
@@ -69,9 +76,13 @@ const Navbar = () => {
         <div className="ml-6 hidden items-center gap-2 xl:flex">
           {user ? (
             <>
-              <span className="rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-semibold text-black">
-                {user.name}
-              </span>
+              <RouterLink
+                to="/dashboard"
+                className="px-1 text-[15px] font-semibold text-black transition-opacity hover:opacity-70"
+                onClick={closeMenu}
+              >
+                Dashboard
+              </RouterLink>
               <button
                 type="button"
                 className="inline-flex border-[3px] border-black bg-[#f8d6b3] px-4 py-2 font-semibold text-black shadow-[4px_4px_0_#000] transition-transform hover:-translate-y-0.5"
@@ -82,6 +93,13 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              <button
+                type="button"
+                className="px-1 text-[15px] font-semibold text-black transition-opacity hover:opacity-70"
+                onClick={handleGuestDashboardClick}
+              >
+                Dashboard
+              </button>
               <RouterLink
                 to="/login"
                 className="inline-flex border-[3px] border-black bg-white px-4 py-2 font-semibold text-black shadow-[4px_4px_0_#000] transition-transform hover:-translate-y-0.5"
@@ -124,7 +142,13 @@ const Navbar = () => {
             ))}
             {user ? (
               <>
-                <span className="rounded-xl border-2 border-black bg-white px-4 py-3">{user.name}</span>
+                <RouterLink
+                  to="/dashboard"
+                  className="rounded-xl border-2 border-black bg-white px-4 py-3"
+                  onClick={closeMenu}
+                >
+                  Dashboard
+                </RouterLink>
                 <button
                   type="button"
                   className="rounded-xl border-2 border-black bg-[#f8d6b3] px-4 py-3 text-left"
@@ -135,6 +159,13 @@ const Navbar = () => {
               </>
             ) : (
               <>
+                <button
+                  type="button"
+                  className="rounded-xl border-2 border-black bg-white px-4 py-3 text-left"
+                  onClick={handleGuestDashboardClick}
+                >
+                  Dashboard
+                </button>
                 <RouterLink to="/login" className="rounded-xl border-2 border-black bg-white px-4 py-3" onClick={closeMenu}>
                   Login
                 </RouterLink>
@@ -146,6 +177,13 @@ const Navbar = () => {
           </nav>
         </div>
       )}
+
+      <LoginPromptModal
+        open={loginPromptOpen}
+        onClose={() => setLoginPromptOpen(false)}
+        titleText="Access your dashboard"
+        descriptionText="Sign in to view your saved paths, sessions, and progress."
+      />
     </header>
   )
 }

@@ -12,9 +12,12 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [role, setRole] = useState('student')
   const [error, setError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
+    setSubmitting(true)
+    setError(null)
     try{
       const res = await api.post(`/api/auth/register/${role}`, form) //server succesful registration result is stored in res
       login(res.data.token, res.data.user) //storing res token and user info in localstorage so logged in persisits after refreshes or changing pages too
@@ -22,6 +25,8 @@ export default function RegisterPage() {
     } 
     catch(err){
       setError(err.response?.data?.errors?.[0]?.msg || 'Registration failed') //every ? means if any step null or undefineined return undefined, || is fallback if all return undefined or null
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -35,10 +40,10 @@ export default function RegisterPage() {
         <p className="mt-3 text-[18px] text-[#666666]">Create your account and begin connecting.</p>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          <Button type="button" variant={role === 'student' ? 'primary' : 'outline'} onClick={() => setRole('student')}>
+          <Button type="button" variant={role === 'student' ? 'primary' : 'outline'} onClick={() => setRole('student')} disabled={submitting}>
             Student
           </Button>
-          <Button type="button" variant={role === 'alumni' ? 'primary' : 'outline'} onClick={() => setRole('alumni')}>
+          <Button type="button" variant={role === 'alumni' ? 'primary' : 'outline'} onClick={() => setRole('alumni')} disabled={submitting}>
             Alumni
           </Button>
           <p className="w-full text-[15px] text-[#5f5f5f]">Registering as: {role}</p>
@@ -74,7 +79,9 @@ export default function RegisterPage() {
             required
           />
           <div className="mt-2">
-            <Button type="submit" size="lg">Register</Button>
+            <Button type="submit" size="lg" disabled={submitting}>
+              {submitting ? 'Creating account...' : 'Register'}
+            </Button>
           </div>
         </form>
       </Card>

@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom'
 import Card from '../components/UI/Card'
 import PageIntro from '../components/UI/PageIntro'
 import ErrorBanner from '../components/UI/ErrorBanner'
+import LoadingSkeleton from '../components/LoadingSkeleton'
 
 export default function AlumniPage() {
   const [alumni, setAlumni] = useState([])
   const [error, setError] = useState(null)
   const [onlineIds, setOnlineIds] = useState(new Set())
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function getAlumni() {
@@ -18,6 +20,8 @@ export default function AlumniPage() {
         setAlumni(alumniData)
       } catch (error) {
         setError("Alumni couldn't get fetched: " + error.message)
+      } finally {
+        setLoading(false)
       }
     }
     getAlumni()
@@ -52,25 +56,29 @@ export default function AlumniPage() {
 
       <ErrorBanner message={error} className="mt-8" />
 
-      <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {alumni.map((person) => (
-          <Link key={person._id} to={`/alumni/${person._id}`} className="no-underline" data-reveal>
-            <Card className="h-full transition-transform hover:-translate-y-1">
-              <p className="font-['Epilogue'] text-[30px] font-black leading-tight text-black">{person.name}</p>
-              <p className="mt-2 text-[17px] text-[#5c5c5c]">{person.currentRole || 'Role not set'}</p>
-              <p className="mt-1 text-[16px] text-[#676767]">{person.currentCompany || 'Company not set'}</p>
-              <p className="mt-4 inline-flex rounded-full border-2 border-black bg-[#f8d6b3] px-3 py-1 text-sm font-semibold text-black">
-                {person.major}
-              </p>
-              {onlineIds.has(person._id) && (
-                <p className="mt-3 inline-flex rounded-full border-2 border-black bg-[#dff5ef] px-3 py-1 text-sm font-semibold text-black">
-                  Online
+      {loading ? (
+        <LoadingSkeleton />
+      ) : (
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {alumni.map((person) => (
+            <Link key={person._id} to={`/alumni/${person._id}`} className="no-underline" data-reveal>
+              <Card className="h-full transition-transform hover:-translate-y-1">
+                <p className="font-['Epilogue'] text-[30px] font-black leading-tight text-black">{person.name}</p>
+                <p className="mt-2 text-[17px] text-[#5c5c5c]">{person.currentRole || 'Role not set'}</p>
+                <p className="mt-1 text-[16px] text-[#676767]">{person.currentCompany || 'Company not set'}</p>
+                <p className="mt-4 inline-flex rounded-full border-2 border-black bg-[#f8d6b3] px-3 py-1 text-sm font-semibold text-black">
+                  {person.major}
                 </p>
-              )}
-            </Card>
-          </Link>
-        ))}
-      </div>
+                {onlineIds.has(person._id) && (
+                  <p className="mt-3 inline-flex rounded-full border-2 border-black bg-[#dff5ef] px-3 py-1 text-sm font-semibold text-black">
+                    Online
+                  </p>
+                )}
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

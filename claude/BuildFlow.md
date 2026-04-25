@@ -290,18 +290,20 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ## PHASE 14 — Deploy Backend (Render)
 
-**Goal:** Backend live, health check 200, UptimeRobot active.
+**Goal:** Backend live, health check 200, no keep-warm dependency required.
 
 **Tasks:**
 - Render web service pointing to `/server`. Add all env vars.
 - Atlas: allow `0.0.0.0/0` (note in README)
-- UptimeRobot: ping `/api/health` every 14 min
+- Do **not** add UptimeRobot or any other keep-warm ping service
+- Accept free-tier cold starts and rely on frontend loading + retry until the backend responds
 - Update Cal.com webhook URL to live Render URL
 - Add `CLIENT_ORIGIN` in Render env → your Vercel URL
 
 **Checkpoint:**
 - [ ] `GET /api/health` → 200 on live URL
-- [ ] Sankey returns real data. UptimeRobot green.
+- [ ] Sankey returns real data on live URL
+- [ ] Cold-start strategy is verified: loading state stays visible, request retries, and content renders once Render wakes
 
 ---
 
@@ -313,7 +315,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 - Vercel: connect repo, root dir `client`, env `VITE_API_URL` → Render URL
 
 **E2E Verification (all must pass manually):**
-1. Guest → Sankey loads immediately
+1. Guest → Sankey shows loading while backend wakes if cold, then renders once the API responds
 2. Guest → browse /alumni, all visible
 3. Guest → /alumni/:id → Schedule Chat → modal, URL stays
 4. Register → login → Cal.com booking → MentorSession + email
@@ -356,6 +358,6 @@ A phase is done when the checkpoint passes, not when the code is written.
 | D3 renders nothing, no error | Data shape mismatch — log payload, verify link source/target match node names exactly |
 | JWT 401 on protected route | Missing `Authorization` header, wrong `Bearer ` prefix, or JWT_SECRET mismatch |
 | Depth filter does nothing | Break in chain: FilterPanel → query string → req.query.depth → pipeline. Check each link. |
-| Cold start fails | Verify Axios retry logic handles 503 + network errors. Verify UptimeRobot pings. |
+| Cold start fails | Verify Axios retry logic handles 503 + network errors. Keep the loading UI visible until the backend responds. |
 | Cal.com webhook not firing | Webhook URL points to localhost, not live Render URL |
 | CI passes locally, fails in Actions | Test has hidden dependency on local state — mock with jest.mock() |

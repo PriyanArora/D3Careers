@@ -149,17 +149,17 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Notes:**
 
 ### PHASE 14 — Deploy Backend (Render)
-- [ ] Backend live on public Render URL
-- [ ] GET /api/health → 200 on live URL
-- [ ] Sankey returns real data on live URL
-- [ ] UptimeRobot active and green
+- [x] Backend live on public Render URL
+- [x] GET /api/health → 200 on live URL
+- [x] Sankey returns real data on live URL
+ - [x] Cold-start strategy verified: loading stays visible, request retries, content renders after backend wakes
 - [ ] CLIENT_ORIGIN set to Vercel URL in Render env
-- [ ] Cal.com webhook URL updated to live Render URL
+- [x] Cal.com webhook URL updated to live Render URL
 - **Commit:** `chore(deploy): configure render backend`
-- **Notes:**
+- **Notes:** Backend live at https://d3careers.onrender.com. Health check and Sankey route verified on Render. No UptimeRobot. Free-tier Render cold starts are accepted; frontend loading + retry covers wake-up.
 
 ### PHASE 15 — Deploy Frontend (Vercel)
-- [ ] E2E 1: Guest → Sankey loads immediately
+- [ ] E2E 1: Guest → Sankey shows loading if backend is cold, then renders after wake-up
 - [ ] E2E 2: Guest → /alumni visible
 - [ ] E2E 3: Guest → Schedule Chat → modal, URL stays
 - [ ] E2E 4: Register → login → booking → MentorSession + email

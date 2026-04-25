@@ -22,6 +22,8 @@ First-gen college students lack informal career guidance. PathFinder visualizes 
 
 Core constraint: **the Sankey diagram is the front door.** Guests must see the full diagram immediately.
 
+Free-tier deployment constraint: **no keep-warm ping service.** Render cold starts are acceptable; the frontend must show a visible loading state, retry the request, and render once the backend wakes.
+
 ## Core Features
 
 - Interactive Sankey diagram: majors → first jobs → career progressions (D3.js + d3-sankey)
@@ -340,7 +342,7 @@ Output: `{ nodes: [{ name }], links: [{ source, target, value }] }`
 ### Public (No Auth)
 | Method | Route | Notes |
 |---|---|---|
-| GET | `/api/health` | `{ status, timestamp }` — UptimeRobot target |
+| GET | `/api/health` | `{ status, timestamp }` — deploy health check and cold-start probe |
 | GET | `/api/pathways/sankey` | `?major=&background=&depth=` — optionalAuth, **ALWAYS public** |
 | GET | `/api/alumni` | optionalAuth — browse grid, filter `isProfileComplete: true`, `?page=&limit=` (default limit=20) |
 | GET | `/api/alumni/:id` | optionalAuth — full career timeline |

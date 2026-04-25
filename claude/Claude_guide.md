@@ -160,7 +160,6 @@ If they put authMiddleware on the Sankey route: "Remove that immediately. The Sa
 | 13 | Dashboard protected, bookmarks save, Recharts | Docker, Redis |
 | 14 | docker compose up starts 3 services | Upstash, deploy |
 | 15 | Cache works, flush on new alumni | Deployment |
-| 16 | Backend live on Render, UptimeRobot active | Frontend deploy |
+| 16 | Backend live on Render, cold-start recovery verified | Frontend deploy |
 | 17 | Full app live on Vercel, 6 e2e scenarios pass | CI/CD |
 | 18 | GitHub Actions green, failed test blocks deploy | N/A |
-

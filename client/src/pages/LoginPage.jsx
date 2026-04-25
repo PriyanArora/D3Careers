@@ -11,10 +11,13 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const [form, setForm] = useState({email: '', password: ''})
   const [error, setError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
   //e is browser action, naturally it refreshes page but we do preventDeault then do our things after to override default behaviour
   async function handleSubmit(e){
     e.preventDefault()
+    setSubmitting(true)
+    setError(null)
     try{
       const res = await api.post('/api/auth/login', form)
       login(res.data.token, res.data.user)
@@ -22,6 +25,8 @@ export default function LoginPage() {
     }
     catch{
       setError("Invalid email or password") //setting error from null to this if unsuccesful login, then with the conditional in return it doesnt render for error not null
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -63,7 +68,9 @@ export default function LoginPage() {
         </p>
 
         <div className="mt-2">
-          <Button type="submit" size="lg">Login</Button>
+          <Button type="submit" size="lg" disabled={submitting}>
+            {submitting ? 'Connecting...' : 'Login'}
+          </Button>
         </div>
       </form>
     </Card>

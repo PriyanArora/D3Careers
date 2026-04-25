@@ -5,6 +5,7 @@ import Button from '../components/UI/Button'
 import Card from '../components/UI/Card'
 import ErrorBanner from '../components/UI/ErrorBanner'
 import Input from '../components/UI/Input'
+import LoadingSkeleton from '../components/LoadingSkeleton'
 
 const backgroundOptions = [
   { label: 'First-gen', value: 'firstGen' },
@@ -260,7 +261,19 @@ export default function DashboardPage() {
           <p className="font-['Epilogue'] text-[32px] font-black leading-tight text-black">Upcoming Meetings</p>
 
           {meetingsLoading ? (
-            <p className="mt-3 text-[17px] text-[#666666]">Loading meetings...</p>
+            <div className="mt-4 rounded-2xl border-2 border-black bg-[#f7f3f4] p-4">
+              <p className="font-['Lexend_Mega'] text-[10px] font-black uppercase tracking-[0.12em] text-[#6a6a6a]">
+                Loading meetings
+              </p>
+              <div className="mt-3 flex items-center gap-3">
+                <div className="relative h-10 w-10 shrink-0 rounded-full border-[3px] border-black bg-white">
+                  <div className="absolute inset-[4px] animate-spin rounded-full border-[4px] border-[#dff5ef] border-t-[#111111]" />
+                </div>
+                <p className="text-[15px] font-semibold text-[#5d5d5d]">
+                  Checking your latest booking data.
+                </p>
+              </div>
+            </div>
           ) : mentorSessions.length === 0 ? (
             <p className="mt-3 text-[17px] text-[#666666]">No meetings booked.</p>
           ) : (
@@ -295,9 +308,9 @@ export default function DashboardPage() {
       </div>
 
       {profileLoading && isAlumni && (
-        <Card className="mt-6" data-reveal>
-          <p className="text-[17px] text-[#666666]">Loading your profile...</p>
-        </Card>
+        <div className="mt-6" data-reveal>
+          <LoadingSkeleton />
+        </div>
       )}
 
       {shouldShowProfileForm && (

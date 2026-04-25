@@ -2,7 +2,7 @@
 
 Update this file as you complete each phase. Security fixes are integrated into the phase checkpoints below.
 
-## Current Phase: 13B
+## Current Phase: 14
 
 ---
 
@@ -135,16 +135,16 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Notes:** DashboardPage already wrapped in ProtectedRoute in main.jsx from Phase 10A.
 - **Notes:**
 
-### PHASE 13B — UI Polish
-- [ ] Consistent layout and navbar across all pages
-- [ ] AlumniPage grid styled (cards with name, role, company, major)
-- [ ] AlumniProfilePage styled (timeline, tags, Schedule Chat button prominent)
-- [ ] PathwaysPage styled (diagram + filter panel layout)
-- [ ] LoginPage + RegisterPage styled (centered form)
-- [ ] DashboardPage styled (sections clearly separated)
-- [ ] LoginPromptModal styled (overlay with backdrop)
-- [ ] Loading skeleton and empty state look intentional
-- [ ] Mobile-friendly (no horizontal scroll on phone)
+### PHASE 13B — UI Polish ✓
+- [x] Consistent layout and navbar across all pages
+- [x] AlumniPage grid styled (cards with name, role, company, major)
+- [x] AlumniProfilePage styled (timeline, tags, Schedule Chat button prominent)
+- [x] PathwaysPage styled (diagram + filter panel layout)
+- [x] LoginPage + RegisterPage styled (centered form)
+- [x] DashboardPage styled (sections clearly separated)
+- [x] LoginPromptModal styled (overlay with backdrop)
+- [x] Loading skeleton and empty state look intentional
+- [x] Mobile-friendly (no horizontal scroll on phone)
 - **Commit:** `feat(ui): polish all pages and components`
 - **Notes:**
 
@@ -177,4 +177,3 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - [ ] No test makes real DB/network calls
 - **Commit:** `ci: add github actions pipelines`
 - **Notes:**
-

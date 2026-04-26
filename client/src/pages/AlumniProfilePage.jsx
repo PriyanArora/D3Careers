@@ -59,6 +59,10 @@ export default function AlumniProfilePage() {
             <Button 
               size="lg"
               onClick={() => {
+                if(!bookingUrl){
+                  console.error('VITE_CAL_BOOKING_URL is missing bruv')
+                  return
+                }
                 window.open(bookingUrl, '_blank')
               }}
             >

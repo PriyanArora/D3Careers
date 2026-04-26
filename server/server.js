@@ -21,6 +21,7 @@ if(!CLIENT_ORIGIN){
 const app = express();
 
 //middleware checkpoints
+app.use("/api/bookings/webhook", express.text({ type: "application/json" }));
 app.use(express.json());
 app.use(cors({origin: CLIENT_ORIGIN}));
 

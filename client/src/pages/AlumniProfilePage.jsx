@@ -54,7 +54,14 @@ export default function AlumniProfilePage() {
 
         <div className="mt-8">
           <SoftAuthGate>
-            <Button size="lg">Schedule Chat</Button>
+            <Button 
+              size="lg"
+              onClick={() => {
+                window.open('https://cal.com/priyanarora/30min', '_blank')
+              }}
+            >
+              Schedule Chat
+            </Button>
           </SoftAuthGate>
         </div>
       </div>

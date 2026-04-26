@@ -115,13 +115,13 @@ Update this file as you complete each phase. Security fixes are integrated into 
 ### PHASE 11 — Alumni Profiles + Scheduling (Partial ✓)
 - [x] Alumni profiles fully visible to guests
 - [x] Schedule Chat as guest → modal (10B seam intact)
-- [ ] Logged-in student completes Cal.com booking *(deferred to Phase 16 — needs live Render URL)*
-- [ ] MentorSession in Atlas with calEventUid *(deferred to Phase 16)*
-- [ ] Alumni receives SendGrid email *(deferred to Phase 16 — needs SendGrid account)*
+- [ ] Logged-in student completes Cal.com booking *(deferred — needs live Cal.com configuration)*
+- [ ] MentorSession in Atlas with calEventUid *(deferred — needs webhook implementation)*
+- [ ] Alumni receives SendGrid email *(deferred — needs SendGrid account)*
 - [x] verifyWebhookSignature: 3 Jest tests pass (written before implementation)
 - [x] MentorRequest.js does NOT exist
 - **Commit:** `feat(alumni): build profiles, calcom embed, booking webhook, sendgrid`
-- **Notes:** AlumniPage.jsx fetches paginated alumni grid, links to /alumni/:id. AlumniProfilePage.jsx fetches full profile + careerTimeline, SoftAuthGate wraps Schedule Chat button. verifyWebhookSignature implemented in bookingController.js, uses HMAC-SHA256 with CAL_WEBHOOK_SECRET. Cal.com webhook URL and SendGrid deferred to Phase 16 when Render URL is available.
+- **Notes:** AlumniPage.jsx fetches paginated alumni grid, links to /alumni/:id. AlumniProfilePage.jsx fetches full profile + careerTimeline, SoftAuthGate wraps Schedule Chat button. verifyWebhookSignature implemented in bookingController.js, uses HMAC-SHA256 with CAL_WEBHOOK_SECRET. Cal.com webhook handling and SendGrid delivery still need live end-to-end verification.
 
 ### PHASE 12 — Real-Time Features ✓
 - [x] Green dot updates on AlumniPage (via polling GET /api/alumni/online)
@@ -167,13 +167,4 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - [ ] E2E 6: Refresh while logged in → still logged in
 - [ ] Playwright automated test passes: guest loads /pathways, Sankey nodes visible
 - **Commit:** `chore(deploy): configure vercel frontend`
-- **Notes:**
-
-### PHASE 16 — CI/CD
-- [ ] Backend pipeline: lint + jest on every push
-- [ ] Frontend pipeline: lint on every push
-- [ ] Failing test blocks deploy hook (verified by testing)
-- [ ] Pipeline green on main
-- [ ] No test makes real DB/network calls
-- **Commit:** `ci: add github actions pipelines`
 - **Notes:**

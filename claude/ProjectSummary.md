@@ -46,7 +46,6 @@ Free-tier deployment constraint: **no keep-warm ping service.** Render cold star
 | Scheduling | Cal.com embed + webhook | Cal.com |
 | Email | SendGrid | SendGrid |
 | Local Dev | Docker Compose | Local |
-| CI/CD | GitHub Actions | GitHub |
 
 React Router v7 in **library mode** — same API as v6, no framework mode. Framework mode would couple routing to data fetching and obscure the Express backend architecture.
 
@@ -372,9 +371,6 @@ Output: `{ nodes: [{ name }], links: [{ source, target, value }] }`
 
 ```
 pathfinder/
-├── .github/workflows/
-│   ├── backend.yml          → lint + jest + deploy hook (main only)
-│   └── frontend.yml         → lint only (Vercel auto-deploys)
 ├── client/src/
 │   ├── api.js               → Axios + JWT header + cold-start retry
 │   ├── context/AuthContext.jsx → localStorage JWT, booking notification polling

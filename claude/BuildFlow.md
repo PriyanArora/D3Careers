@@ -21,7 +21,7 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 **Tasks:**
 - `mkdir pathfinder && cd pathfinder && git init && git checkout -b chore/init`
-- Create folder structure: `client/`, `server/` with `models/ routes/ controllers/ services/ middleware/ __tests__/ scripts/`, `.github/workflows/`
+- Create folder structure: `client/`, `server/` with `models/ routes/ controllers/ services/ middleware/ __tests__/ scripts/`
 - Create `.gitignore` BEFORE any other file: `node_modules/`, `.env`, `.env.*`, `*.local`, `dist/`, `.DS_Store`
 - Commit, push, open PR, merge to main
 
@@ -333,22 +333,6 @@ A phase is done when the checkpoint passes, not when the code is written.
 
 ---
 
-## PHASE 16 — CI/CD
-
-**Goal:** Every push runs lint + tests. Failing test blocks deploy.
-
-**Tasks:**
-- `.github/workflows/backend.yml`: checkout → Node 20 → npm ci → lint → jest → (main only) curl Render deploy hook
-- `.github/workflows/frontend.yml`: checkout → Node 20 → npm ci → lint
-- Add `RENDER_DEPLOY_HOOK` to GitHub secrets
-
-**Checkpoint:**
-- [ ] Pipeline green on main
-- [ ] Deliberately failing test blocks deploy hook (verified)
-- [ ] No test makes real DB/network calls in CI
-
----
-
 ## Common Problems
 
 | Problem | Fix |
@@ -360,4 +344,3 @@ A phase is done when the checkpoint passes, not when the code is written.
 | Depth filter does nothing | Break in chain: FilterPanel → query string → req.query.depth → pipeline. Check each link. |
 | Cold start fails | Verify Axios retry logic handles 503 + network errors. Keep the loading UI visible until the backend responds. |
 | Cal.com webhook not firing | Webhook URL points to localhost, not live Render URL |
-| CI passes locally, fails in Actions | Test has hidden dependency on local state — mock with jest.mock() |

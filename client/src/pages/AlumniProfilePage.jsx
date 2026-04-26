@@ -6,6 +6,8 @@ import Card from '../components/UI/Card'
 import Button from '../components/UI/Button'
 import ErrorBanner from '../components/UI/ErrorBanner'
 
+const bookingUrl = import.meta.env.VITE_CAL_BOOKING_URL
+
 export default function AlumniProfilePage() {
   const {id} = useParams()
   const [error, setError] = useState(null)
@@ -57,7 +59,7 @@ export default function AlumniProfilePage() {
             <Button 
               size="lg"
               onClick={() => {
-                window.open('https://cal.com/priyanarora/30min', '_blank')
+                window.open(bookingUrl, '_blank')
               }}
             >
               Schedule Chat

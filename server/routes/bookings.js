@@ -14,17 +14,29 @@ router.get("/:studentId", authMiddleware, (req,res)=>{
   res.json({message: "bookings studentId route"});
 });
 
-router.post("/webhook", express.text({ type: "application/json" }), (req,res)=>{
+router.post("/webhook", (req,res)=>{
   const payload = req.body;
   const signature = req.headers['x-cal-signature-256'];
   
-  const isValid = verifyWebhookSignature(payload, signature);
-
-  if (!isValid) {
-    return res.status(401).json({ message: 'Invalid signature' });
+  if (!signature) {
+    return res.status(401).json({ message: 'Missing signature' });
   }
 
-  res.status(200).json({ received: true });
+  try{
+    const isValid = verifyWebhookSignature(payload, signature);
+
+    if (!isValid) {
+      return res.status(401).json({ message: 'Invalid signature' });
+    }
+
+    return res.status(200).json({ received: true });
+
+  }
+  catch(error){
+    console.error({ cause: error }, 'failed to verify cal webhook signature');
+    return res.status(500).json({ message: 'Webhook verification failed' });
+  }
+  
 });
 
 module.exports = router;

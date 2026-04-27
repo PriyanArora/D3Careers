@@ -203,7 +203,7 @@ flowchart TD
     A[User registers or logs in]
     A --> B[Backend checks the request]
     B --> C[Backend creates a JWT]
-    C --> D[Frontend saves the token in localStorage]
+    C --> D[Frontend saves the token in localStorage so User stays logged in even if application closed]
     D --> E[Axios sends the token in the Authorization header]
 ```
 
@@ -214,7 +214,7 @@ flowchart TD
 - password hashing with `bcryptjs`
 - JWT token creation on login and register
 - `AuthContext` on the frontend
-- token persistence with `localStorage`
+- token persistence with `localStorage` so User stays logged in even if application closed
 - protected dashboard route
 - optional auth for public pages
 - soft login gate for actions that guests should not complete

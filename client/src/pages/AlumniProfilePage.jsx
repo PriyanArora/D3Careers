@@ -59,11 +59,14 @@ export default function AlumniProfilePage() {
             <Button 
               size="lg"
               onClick={() => {
-                if(!bookingUrl){
-                  console.error('VITE_CAL_BOOKING_URL is missing bruv')
+                if (!bookingUrl) {
+                  console.error('VITE_CAL_BOOKING_URL is missing')
                   return
                 }
-                window.open(bookingUrl, '_blank')
+
+                const calUrl = new URL(bookingUrl)
+                calUrl.searchParams.set('alumniId', id)
+                window.open(calUrl.toString(), '_blank')
               }}
             >
               Schedule Chat

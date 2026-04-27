@@ -33,7 +33,7 @@ Built as a full stack app with React on the frontend, Node and Express on the ba
 - shows alumni profiles with timeline, skills, and advice
 - uses Cal.com for scheduling meetings between students and alumni
 
-## System Diagram
+## System Diagram Overview
 
 ```mermaid
 flowchart TD
@@ -42,6 +42,89 @@ flowchart TD
     B --> C[Express backend]
     C --> D[MongoDB Atlas]
     C --> E[Cal.com]
+```
+
+## System Design Sequence Diagram
+```mermaid
+sequenceDiagram
+    autonumber
+
+    actor User as Student / Alumni / Guest
+    participant FE as React + Vite Frontend<br/>React Router, Tailwind, Axios, AuthContext
+    participant Viz as D3.js + d3-sankey
+    participant API as Node.js + Express Backend<br/>CORS, Rate Limit, Validation, Protected Routes
+    participant Auth as JWT + bcryptjs
+    participant DB as MongoDB Atlas<br/>Mongoose Models
+    participant Cal as Cal.com Scheduling
+
+    User->>FE: Open D3Careers
+    FE->>FE: Load routes and AuthContext
+    FE->>FE: Read JWT user session from localStorage
+
+    alt Guest explores public pages
+        User->>FE: Open Pathways / Alumni / Alumni Profile
+        FE->>API: Axios GET public API routes
+        API->>API: Apply CORS and optional auth
+        API->>DB: Query alumni and career timeline data
+        DB-->>API: Return alumni records
+        API-->>FE: Return alumni profiles or Sankey nodes and links
+        FE->>Viz: Render career movement Sankey diagram
+        Viz-->>User: Show filtered career paths
+    end
+
+    alt Student or alumni registers / logs in
+        User->>FE: Submit auth form
+        FE->>API: POST /api/auth/register/student, /register/alumni, or /login
+        API->>API: Apply rate limit and express-validator checks
+        API->>DB: Find or create Student / Alumni user
+        DB-->>API: Return user record
+        API->>Auth: Hash password with bcryptjs or verify password
+        Auth->>Auth: Create signed JWT
+        Auth-->>API: JWT token
+        API-->>FE: Return token and user role
+        FE->>FE: Store token in localStorage
+        FE->>API: Send future requests with Authorization Bearer token
+    end
+
+    alt Logged-in user opens protected dashboard
+        User->>FE: Open Dashboard
+        FE->>API: Axios GET protected dashboard/profile/session routes
+        API->>Auth: Verify JWT
+        Auth-->>API: Valid user id and role
+        API->>API: Check route ownership and role permissions
+        API->>DB: Read or update Student / Alumni / MentorSession data
+        DB-->>API: Return protected data
+        API-->>FE: Return dashboard response
+        FE-->>User: Show dashboard or alumni profile setup
+    end
+
+    alt Alumni completes public mentor profile
+        User->>FE: Submit profile details and career timeline
+        FE->>API: POST /api/alumni with JWT
+        API->>Auth: Verify JWT and alumni role
+        API->>DB: Update Alumni profile with Mongoose
+        DB-->>API: Saved complete profile
+        API-->>FE: Return updated alumni profile
+        FE-->>User: Show saved profile
+    end
+
+    alt Logged-in user schedules chat
+        User->>FE: Click Schedule Chat
+        FE->>Cal: Open Cal.com booking flow with selected alumni
+        Cal-->>User: Handle time slot, confirmation, and emails
+        Cal->>API: POST /api/bookings/webhook
+        API->>API: Verify Cal.com webhook signature
+        API->>DB: Match student, alumni, and booking event
+        API->>DB: Save MentorSession if not duplicate
+        DB-->>API: Return saved booking
+        API-->>Cal: Webhook accepted
+    else Guest clicks Schedule Chat
+        FE-->>User: Show login modal
+    end
+
+    Note over FE,API: Frontend deploys on Vercel. Backend deploys on Render.
+    Note over DB: Alumni seed data comes from refined Kaggle dataset and powers alumni pages plus Sankey paths.
+    Note over API: Backend tests use Jest and Supertest for Sankey routes, Sankey shape logic, and booking signature helpers.
 ```
 
 

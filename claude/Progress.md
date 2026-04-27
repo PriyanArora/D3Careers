@@ -115,13 +115,14 @@ Update this file as you complete each phase. Security fixes are integrated into 
 ### PHASE 11 — Alumni Profiles + Scheduling (Partial ✓)
 - [x] Alumni profiles fully visible to guests
 - [x] Schedule Chat as guest → modal (10B seam intact)
-- [ ] Logged-in student completes Cal.com booking *(deferred to Phase 16 — needs live Render URL)*
-- [ ] MentorSession in Atlas with calEventUid *(deferred to Phase 16)*
-- [ ] Alumni receives SendGrid email *(deferred to Phase 16 — needs SendGrid account)*
+- [ ] Logged-in student completes Cal.com booking *(deferred — needs live Cal.com configuration)*
+- [x] Webhook handler creates MentorSession with calEventUid in app code
+- [ ] Alumni receives SendGrid email *(deferred — needs SendGrid account)*
 - [x] verifyWebhookSignature: 3 Jest tests pass (written before implementation)
+- [x] Webhook route tests cover signature, payload guards, duplicate detection, and session creation
 - [x] MentorRequest.js does NOT exist
 - **Commit:** `feat(alumni): build profiles, calcom embed, booking webhook, sendgrid`
-- **Notes:** AlumniPage.jsx fetches paginated alumni grid, links to /alumni/:id. AlumniProfilePage.jsx fetches full profile + careerTimeline, SoftAuthGate wraps Schedule Chat button. verifyWebhookSignature implemented in bookingController.js, uses HMAC-SHA256 with CAL_WEBHOOK_SECRET. Cal.com webhook URL and SendGrid deferred to Phase 16 when Render URL is available.
+- **Notes:** AlumniPage.jsx fetches paginated alumni grid, links to /alumni/:id. AlumniProfilePage.jsx fetches full profile + careerTimeline, SoftAuthGate wraps Schedule Chat button, and logged-in users can open the Cal.com booking link from env. verifyWebhookSignature implemented in bookingController.js, uses HMAC-SHA256 with CAL_WEBHOOK_SECRET. `/api/bookings/webhook` now verifies the signature, parses the Cal.com payload, ignores non-BOOKING_CREATED events, guards required fields, looks up Student and Alumni by email, deduplicates on calEventUid, and creates a MentorSession. Jest route tests pass for the webhook flow. Live Cal.com booking verification and SendGrid delivery still need end-to-end verification.
 
 ### PHASE 12 — Real-Time Features ✓
 - [x] Green dot updates on AlumniPage (via polling GET /api/alumni/online)
@@ -158,6 +159,8 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - **Commit:** `chore(deploy): configure render backend`
 - **Notes:** Backend live at https://d3careers.onrender.com. Health check and Sankey route verified on Render. No UptimeRobot. Free-tier Render cold starts are accepted; frontend loading + retry covers wake-up.
 
+codex resume 019dc860-0cde-7133-ab51-3c24f6e1349c
+
 ### PHASE 15 — Deploy Frontend (Vercel)
 - [ ] E2E 1: Guest → Sankey shows loading if backend is cold, then renders after wake-up
 - [ ] E2E 2: Guest → /alumni visible
@@ -167,13 +170,4 @@ Update this file as you complete each phase. Security fixes are integrated into 
 - [ ] E2E 6: Refresh while logged in → still logged in
 - [ ] Playwright automated test passes: guest loads /pathways, Sankey nodes visible
 - **Commit:** `chore(deploy): configure vercel frontend`
-- **Notes:**
-
-### PHASE 16 — CI/CD
-- [ ] Backend pipeline: lint + jest on every push
-- [ ] Frontend pipeline: lint on every push
-- [ ] Failing test blocks deploy hook (verified by testing)
-- [ ] Pipeline green on main
-- [ ] No test makes real DB/network calls
-- **Commit:** `ci: add github actions pipelines`
 - **Notes:**

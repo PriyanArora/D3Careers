@@ -14,14 +14,10 @@ export default function SoftAuthGate({ children }) {
     return null
   }
 
-  const childClick = children.props.onClick
   const gatedChild = cloneElement(children, {
     onClick: (event) => {
       event.preventDefault()
       setOpen(true)
-      if (childClick) {
-        childClick(event)
-      }
     },
   })
 

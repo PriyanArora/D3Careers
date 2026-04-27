@@ -1,6 +1,8 @@
 const {verifyWebhookSignature} = require("../controllers/bookingController.js")
 const crypto = require("crypto");
 
+process.env.CAL_WEBHOOK_SECRET = "testsecret";
+
 //cal sends signautre as HMAC-SHA256 hex string, using crypto which is node's built in hashing function
 describe("verifyWebhookSignature", ()=>{
   
@@ -31,5 +33,16 @@ describe("verifyWebhookSignature", ()=>{
     const input = verifyWebhookSignature(payload, signature)
 
     expect(input).toBe(false)
+  });
+
+  test("throws if webhook secret is missing", () => {
+    const originalSecret = process.env.CAL_WEBHOOK_SECRET;
+    delete process.env.CAL_WEBHOOK_SECRET;
+
+    expect(() => verifyWebhookSignature('{"event":"booking"}', "any-signature")).toThrow(
+      "CAL_WEBHOOK_SECRET is not set."
+    );
+
+    process.env.CAL_WEBHOOK_SECRET = originalSecret;
   });
 })

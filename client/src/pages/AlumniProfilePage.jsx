@@ -6,6 +6,8 @@ import Card from '../components/UI/Card'
 import Button from '../components/UI/Button'
 import ErrorBanner from '../components/UI/ErrorBanner'
 
+const bookingUrl = import.meta.env.VITE_CAL_BOOKING_URL
+
 export default function AlumniProfilePage() {
   const {id} = useParams()
   const [error, setError] = useState(null)
@@ -54,7 +56,21 @@ export default function AlumniProfilePage() {
 
         <div className="mt-8">
           <SoftAuthGate>
-            <Button size="lg">Schedule Chat</Button>
+            <Button 
+              size="lg"
+              onClick={() => {
+                if (!bookingUrl) {
+                  console.error('VITE_CAL_BOOKING_URL is missing')
+                  return
+                }
+
+                const calUrl = new URL(bookingUrl)
+                calUrl.searchParams.set('alumniId', id)
+                window.open(calUrl.toString(), '_blank')
+              }}
+            >
+              Schedule Chat
+            </Button>
           </SoftAuthGate>
         </div>
       </div>
